@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Page Title</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="css/reset.css" rel="stylesheet" />
+  <link href="css/main.css" rel="stylesheet" />
+</head>
+
+<body>
+  <section class="small-mobile-player" id="smp">
+    <i class="fa fa-angle-up" style="font-size: 92px; margin-left: 32px;" onclick="toggleMobilePlayer()"></i>
+    <div style="font-size: 64px;" class="player-title">lambda - just do it</div>
+    <i class="fa fa-play" style="font-size: 64px; margin-right: 32px;"></i>
+  </section>
+
+  <section class="full-mobile-player" id="fmp">
+
+    <div class="fmp-img-container">
+      <img class="fmp-img" src="/images/filler.jpg" />
+    </div>
+
+    <div class="fmp-controls-container">
+
+      <div class="fmp-controls-title">
+        lambda - just do it
+      </div>
+
+      <div class="fmp-controls-slider">
+        <input type="range" min="1" max="100" value="50">
+      </div>
+
+      <div class="fmp-controls-player">
+        <i class="fa fa-step-backward" style="font-size: 64px; margin-left: 64px;"></i>
+        <i class="fa fa-play" style="font-size: 64px; margin-right: 32px;"></i>
+        <i class="fa fa-step-forward" style="font-size: 64px; margin-right: 64px;"></i>
+      </div>
+
+    </div>
+
+    <div class="fmp-navigation">
+      <i class="fa fa-angle-down" style="font-size: 92px; margin-left: 32px;" onclick="toggleMobilePlayer()"></i>
+      <i class="fa fa-list" style="font-size: 64px; margin-right: 32px;"></i>
+    </div>
+
+  </section>
+</body>
+<script src="https://connect.soundcloud.com/sdk/sdk-3.3.2.js"></script>
+<script>
+  var fullMobilePlayerShow = false;
+  var smp = document.getElementById("smp");
+  var fmp = document.getElementById("fmp");
+  var playlist = [];
+  var playing = true;
+  var loading = false;
+
+  SC.initialize({
+    client_id: 'qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5',
+    redirect_uri: 'https://example.com/callback'
+  });
+
+  SC.get(`playlists/1064225653`).then(({ tracks }) => {
+    tracks.forEach((song) => {
+      playlist.push({
+        name: song.title,
+        singer: '',
+        cover: song.artwork_url,
+        musicSrc: `${song.stream_url}?client_id=qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5`,
+      });
+    })
+    initPlayer()
+  });
+
+
+  function initPlayer() {
+    console.log(playlist)
+  }
+
+  function toggleMobilePlayer() {
+    if (fullMobilePlayerShow) {
+      smp.style.transitionDelay = "350ms"
+      smp.style.transform = "translateY(0)"
+      fmp.style.transform = "translateY(100vh)"
+      fullMobilePlayerShow = !fullMobilePlayerShow
+    } else {
+      smp.style.transitionDelay = "0ms"
+      smp.style.transform = "translateY(151px)"
+      fmp.style.transform = "translateY(0)"
+      fullMobilePlayerShow = !fullMobilePlayerShow
+    }
+  }
+</script>
+
+</html>
