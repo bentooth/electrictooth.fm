@@ -11,7 +11,10 @@
 <body>
   <section class="small-mobile-player" id="smp">
     <i class="fa fa-angle-up" style="font-size: 92px; margin-left: 32px;" onclick="toggleMobilePlayer()"></i>
-    <div style="font-size: 64px;" class="player-title">lambda - just do it</div>
+    <div style="font-size: 64px;">
+      <p class="player-title"></p>
+      <p class="player-singer"></p>
+    </div>
     <i class="fa fa-play" style="font-size: 64px; margin-right: 32px;"></i>
   </section>
 
@@ -24,7 +27,8 @@
     <div class="fmp-controls-container">
 
       <div class="fmp-controls-title">
-        lambda - just do it
+        <p class="player-title"></p>
+        <p class="player-singer"></p>
       </div>
 
       <div class="fmp-controls-slider">
@@ -32,9 +36,9 @@
       </div>
 
       <div class="fmp-controls-player">
-        <i class="fa fa-step-backward" style="font-size: 64px; margin-left: 64px;"></i>
-        <i class="fa fa-play" style="font-size: 64px; margin-right: 32px;"></i>
-        <i class="fa fa-step-forward" style="font-size: 64px; margin-right: 64px;"></i>
+        <i class="fa fa-step-backward" style="font-size: 64px;"></i>
+        <i class="fa fa-play" style="font-size: 64px;"></i>
+        <i class="fa fa-step-forward" style="font-size: 64px;"></i>
       </div>
 
     </div>
@@ -61,11 +65,17 @@
   });
 
   SC.get(`playlists/1064225653`).then(({ tracks }) => {
+
+    //https://i1.sndcdn.com/artworks-ZbHh7Lw12V8bgTEF-GKcmIg-t500x500.jpg
     tracks.forEach((song) => {
+      let me = song.title.split('-')
+      let singer = me[0].trim();
+      let title = me[1].trim();
+
       playlist.push({
-        name: song.title,
-        singer: '',
-        cover: song.artwork_url,
+        title: title,
+        singer: singer,
+        cover: song.artwork_url.replace('large', 't500x500'),
         musicSrc: `${song.stream_url}?client_id=qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5`,
       });
     })
@@ -74,7 +84,21 @@
 
 
   function initPlayer() {
-    console.log(playlist)
+    let titles = document.getElementsByClassName('player-title');
+    let singer = document.getElementsByClassName('player-singer');
+    let imgs = document.getElementsByClassName('fmp-img');
+
+    for (e of titles) {
+      e.innerHTML = playlist[2].title
+
+    }
+    for (s of singer) {
+      s.innerHTML = playlist[2].singer
+    }
+
+    for (i of imgs) {
+      i.src = playlist[2].cover
+    }
   }
 
   function toggleMobilePlayer() {
@@ -89,6 +113,10 @@
       fmp.style.transform = "translateY(0)"
       fullMobilePlayerShow = !fullMobilePlayerShow
     }
+  }
+
+  window.onload = function () {
+    smp.style.transform = "translateY(0)"
   }
 </script>
 
