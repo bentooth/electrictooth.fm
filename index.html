@@ -9,6 +9,8 @@
 </head>
 
 <body>
+  <audio id="audio-ele" type='audio/mpeg'></audio>
+
   <section class="small-mobile-player" id="smp">
     <i class="fa fa-angle-up" style="font-size: 92px; margin-left: 32px;" onclick="toggleMobilePlayer()"></i>
     <div style="font-size: 64px;">
@@ -31,13 +33,25 @@
         <p class="player-singer"></p>
       </div>
 
-      <div class="fmp-controls-slider">
-        <input type="range" min="1" max="100" value="50">
+      <div class="fmp-controls-slider" style="padding: 0 64px;">
+        <div class="progress-bar" style="height: 24px; position:relative; width:100%">
+          <div class="middle-align progress-bar__bg" id="progress-bar__track"
+            style="background-color:#b3b3b3; border-radius: 12px; display: flex; height:24px; width:100%">
+            <div class="progress-bar__fg_wrapper"
+              style="overflow:hidden; width:100%; height:24px; border-radius: 12px;">
+              <div class="progress-bar__fg" id="progress-bar__progress"
+                style="background-color:#05aea5; border-radius: 12px; height: 24px; width:100%">
+              </div>
+              <button class="middle-align progress-bar__slider" id="progress-bar__button"
+                style="z-index: 99; width: 50px;margin-left: -24px;height: 50px;border-radius: 50%;border: 0;background-color: #fff;box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);"></button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="fmp-controls-player">
         <i class="fa fa-step-backward" style="font-size: 64px;"></i>
-        <i class="fa fa-play" style="font-size: 64px;"></i>
+        <i class="fa fa-play" style="font-size: 64px;" onclick="play()"></i>
         <i class="fa fa-step-forward" style="font-size: 64px;"></i>
       </div>
 
@@ -55,9 +69,18 @@
   var fullMobilePlayerShow = false;
   var smp = document.getElementById("smp");
   var fmp = document.getElementById("fmp");
+  var pbt = document.getElementById("progress-bar__track");
+  var pbp = document.getElementById("progress-bar__progress");
+  pbp.style.transform = `translateX(${-100}%)`
+  var pbb = document.getElementById("progress-bar__button");
+
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
   var playlist = [];
-  var playing = true;
+  var playing = false;
   var loading = false;
+  var audio = document.getElementById('audio-ele');
+  audio.addEventListener('timeupdate', timeUpdate, false);
 
   SC.initialize({
     client_id: 'qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5',
@@ -65,8 +88,7 @@
   });
 
   SC.get(`playlists/1064225653`).then(({ tracks }) => {
-
-    //https://i1.sndcdn.com/artworks-ZbHh7Lw12V8bgTEF-GKcmIg-t500x500.jpg
+    console.log(tracks)
     tracks.forEach((song) => {
       let me = song.title.split('-')
       let singer = me[0].trim();
@@ -77,16 +99,58 @@
         singer: singer,
         cover: song.artwork_url.replace('large', 't500x500'),
         musicSrc: `${song.stream_url}?client_id=qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5`,
+        duration: song.duration
       });
     })
     initPlayer()
   });
 
+  pbt.addEventListener('mousemove', moveplayhead);
+
+  function moveplayhead(e) {
+    let newClient = e.clientX - pbt.getBoundingClientRect().left;
+    let newbutton = 100 * (newClient / pbt.offsetWidth);
+    let newprogress = newbutton - 100;
+
+    if (newbutton > 100) {
+      pbb.style.left = `${100}%`
+      pbp.style.transform = `translateX(${0}%)`
+      return
+    }
+
+    if (newbutton < 0) {
+      pbb.style.left = `${0}%`
+      pbp.style.transform = `translateX(${-100}%)`
+      return
+    }
+
+    pbb.style.left = `${newbutton}%`
+    pbp.style.transform = `translateX(${newprogress}%)`
+    return
+  }
+
+  function play() {
+    if (playing) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    playing = !playing
+  }
+
+  function timeUpdate() {
+    let buttonPercent = 100000 * (audio.currentTime / playlist[2].duration);
+    let trackPercent = buttonPercent - 100;
+    pbb.style.left = `${buttonPercent}%`
+    pbp.style.transform = `translateX(${trackPercent}%)`
+  }
 
   function initPlayer() {
     let titles = document.getElementsByClassName('player-title');
     let singer = document.getElementsByClassName('player-singer');
     let imgs = document.getElementsByClassName('fmp-img');
+
+    audio.src = playlist[2].musicSrc;
 
     for (e of titles) {
       e.innerHTML = playlist[2].title

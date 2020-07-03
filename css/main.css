@@ -17,6 +17,12 @@
   font-display: block;
 }
 
+.middle-align {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 :root {
   --et-green: #05aea5;
   --et-grey: #94999e;
@@ -27,7 +33,7 @@
 
 @media screen and (min-width: 320px) {
   .small-mobile-player {
-    display: flex;
+    display: none;
     width: 100%;
     position: fixed;
     bottom: 0;
@@ -52,7 +58,7 @@
     height: 100vh;
     width: 100vw;
     padding: 0;
-    transform: translateY(100vh);
+    /* transform: translateY(100vh); */
     transition: transform 350ms ease-out;
     z-index: 2;
   }
@@ -85,6 +91,7 @@
     color: #023436;
     text-align: center;
     font-size: 0.6em;
+    padding: 4px;
   }
 
   .player-singer {
