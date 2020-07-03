@@ -79,6 +79,7 @@
   var playlist = [];
   var playing = false;
   var loading = false;
+  var onplayahead = false;
   var audio = document.getElementById('audio-ele');
   audio.addEventListener('timeupdate', timeUpdate, false);
 
@@ -88,7 +89,6 @@
   });
 
   SC.get(`playlists/1064225653`).then(({ tracks }) => {
-    console.log(tracks)
     tracks.forEach((song) => {
       let me = song.title.split('-')
       let singer = me[0].trim();
@@ -105,10 +105,25 @@
     initPlayer()
   });
 
-  pbt.addEventListener('mousemove', moveplayhead);
+  pbb.addEventListener("touchstart", (e) => moveplayhead(e));
+  pbb.addEventListener("touchmove", (e) => moveplayhead(e));
+  pbb.addEventListener("touchend", (e) => endTouch(e));
+
+  pbt.addEventListener("touchstart", (e) => moveplayhead(e));
+  pbt.addEventListener("touchmove", (e) => moveplayhead(e));
+  pbt.addEventListener("touchend", (e) => endTouch(e));
 
   function moveplayhead(e) {
-    let newClient = e.clientX - pbt.getBoundingClientRect().left;
+    audio.removeEventListener('timeupdate', timeUpdate, false);
+    let newClient
+    if (e.touches[0].clientX) {
+      newClient = e.touches[0].clientX - pbt.getBoundingClientRect().left;
+    }
+
+    if (e.clientX) {
+      newClient = e.clientX - pbt.getBoundingClientRect().left;
+    }
+
     let newbutton = 100 * (newClient / pbt.offsetWidth);
     let newprogress = newbutton - 100;
 
@@ -127,6 +142,17 @@
     pbb.style.left = `${newbutton}%`
     pbp.style.transform = `translateX(${newprogress}%)`
     return
+  }
+
+  function endTouch() {
+    let buttonPositionInPercent = pbb.style.left;
+    let percentDeci = buttonPositionInPercent.substring(0, buttonPositionInPercent.length - 1);
+    percentDeci = percentDeci / 100;
+    let newCurrentTime = playlist[2].duration * percentDeci
+    newCurrentTime = newCurrentTime.toFixed(0);
+    newCurrentTime = newCurrentTime / 1000
+    audio.currentTime = newCurrentTime;
+    audio.addEventListener('timeupdate', timeUpdate, false);
   }
 
   function play() {
