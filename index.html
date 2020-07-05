@@ -11,13 +11,23 @@
 <body>
   <audio id="audio-ele" type='audio/mpeg'></audio>
 
+
   <section class="small-mobile-player" id="smp">
+
+    <div class="mini-progress-bar">
+      <div class="middle-align mini-progress-bar__bg" id="mini-progress-bar__track">
+        <div class="mini-progress-bar__fg_wrapper">
+          <div class="mini-progress-bar__fg" id="mini-progress-bar__progress"></div>
+        </div>
+      </div>
+    </div>
+
     <i class="fa fa-angle-up" style="font-size: 92px; margin-left: 32px;" onclick="toggleMobilePlayer()"></i>
     <div style="font-size: 64px;">
       <p class="player-title"></p>
       <p class="player-singer"></p>
     </div>
-    <i class="fa fa-play" style="font-size: 64px; margin-right: 32px;"></i>
+    <i class="fa fa-play" style="font-size: 64px; margin-right: 32px;" onclick="play()"></i>
   </section>
 
   <section class="full-mobile-player" id="fmp">
@@ -33,17 +43,12 @@
         <p class="player-singer"></p>
       </div>
 
-      <div class="fmp-controls-slider" style="padding: 0 64px;">
-        <div class="progress-bar" style="height: 24px; position:relative; width:100%">
-          <div class="middle-align progress-bar__bg" id="progress-bar__track"
-            style="background-color:#b3b3b3; border-radius: 12px; display: flex; height:24px; width:100%">
-            <div class="progress-bar__fg_wrapper"
-              style="overflow:hidden; width:100%; height:24px; border-radius: 12px;">
-              <div class="progress-bar__fg" id="progress-bar__progress"
-                style="background-color:#05aea5; border-radius: 12px; height: 24px; width:100%">
-              </div>
-              <button class="middle-align progress-bar__slider" id="progress-bar__button"
-                style="z-index: 99; width: 50px;margin-left: -24px;height: 50px;border-radius: 50%;border: 0;background-color: #fff;box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);"></button>
+      <div class="fmp-controls-slider">
+        <div class="progress-bar">
+          <div class="middle-align progress-bar__bg" id="progress-bar__track">
+            <div class="progress-bar__fg_wrapper">
+              <div class="progress-bar__fg" id="progress-bar__progress"></div>
+              <button class="middle-align progress-bar__slider" id="progress-bar__button"></button>
             </div>
           </div>
         </div>
@@ -74,7 +79,9 @@
   pbp.style.transform = `translateX(${-100}%)`
   var pbb = document.getElementById("progress-bar__button");
 
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  var mpbt = document.getElementById("mini-progress-bar__track");
+  var mpbp = document.getElementById("mini-progress-bar__progress");
+  mpbp.style.transform = `translateX(${-100}%)`
 
   var playlist = [];
   var playing = false;
@@ -130,17 +137,23 @@
     if (newbutton > 100) {
       pbb.style.left = `${100}%`
       pbp.style.transform = `translateX(${0}%)`
+
+      mpbp.style.transform = `translateX(${0}%)`
       return
     }
 
     if (newbutton < 0) {
       pbb.style.left = `${0}%`
       pbp.style.transform = `translateX(${-100}%)`
+
+      mpbp.style.transform = `translateX(${-100}%)`
       return
     }
 
     pbb.style.left = `${newbutton}%`
     pbp.style.transform = `translateX(${newprogress}%)`
+
+    mpbp.style.transform = `translateX(${newprogress}%)`
     return
   }
 
@@ -169,6 +182,8 @@
     let trackPercent = buttonPercent - 100;
     pbb.style.left = `${buttonPercent}%`
     pbp.style.transform = `translateX(${trackPercent}%)`
+
+    mpbp.style.transform = `translateX(${trackPercent}%)`
   }
 
   function initPlayer() {
