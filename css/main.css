@@ -102,10 +102,10 @@
   }
 
   .mini-progress-bar {
-    height: 4px;
+    height: 6px;
     position: absolute;
     width: 100%;
-    margin-top: -4px;
+    margin-top: -8px;
     top: 0;
     left: 0;
   }
@@ -113,19 +113,19 @@
   .mini-progress-bar__bg {
     background-color: #b3b3b3;
     display: flex;
-    height: 4px;
+    height: 6px;
     width: 100%;
   }
 
   .mini-progress-bar__fg_wrapper {
     overflow: hidden;
     width: 100%;
-    height: 4px;
+    height: 6px;
   }
 
   .mini-progress-bar__fg {
     background-color: var(--et-green);
-    height: 4px;
+    height: 6px;
     width: 100%;
   }
 
