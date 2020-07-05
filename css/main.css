@@ -124,7 +124,7 @@
   }
 
   .mini-progress-bar__fg {
-    background-color: var(--et-green)
+    background-color: var(--et-green);
     height: 4px;
     width: 100%;
   }
@@ -161,7 +161,7 @@
   }
 
   .progress-bar__fg {
-    background-color: var(--et-green)
+    background-color: var(--et-green);
     border-radius: 12px;
     height: 24px;
     width: 100%;
