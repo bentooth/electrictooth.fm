@@ -22,12 +22,23 @@
       </div>
     </div>
 
-    <i class="fa fa-angle-up" style="font-size: 92px; margin-left: 32px;" onclick="toggleMobilePlayer()"></i>
-    <div style="font-size: 64px;">
-      <p class="player-title"></p>
-      <p class="player-singer"></p>
+    <div style="display: flex; justify-content:space-between; align-items: center; width:100%">
+
+      <div onclick="toggleMobilePlayer()">
+        <img class="fmp-img" src="/images/filler.jpg" style="width: 150px; height: 150px" />
+      </div>
+
+      <div onclick="toggleMobilePlayer()"
+        style="font-size: 52px; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+        <div class="player-title"></div>
+        <div class="player-singer"></div>
+      </div>
+
+      <div style="width: 64px; margin-right: 36px;">
+        <i class="play-icon fa fa-play" style="font-size: 64px;" onclick="play()"></i>
+      </div>
     </div>
-    <i class="fa fa-play" style="font-size: 64px; margin-right: 32px;" onclick="play()"></i>
+
   </section>
 
   <section class="full-mobile-player" id="fmp">
@@ -56,7 +67,9 @@
 
       <div class="fmp-controls-player">
         <i class="fa fa-step-backward" style="font-size: 64px;"></i>
-        <i class="fa fa-play" style="font-size: 64px;" onclick="play()"></i>
+        <div style="width: 54px;">
+          <i class="play-icon fa fa-play" style="font-size: 64px;" onclick="play()"></i>
+        </div>
         <i class="fa fa-step-forward" style="font-size: 64px;"></i>
       </div>
 
@@ -89,6 +102,7 @@
   var onplayahead = false;
   var audio = document.getElementById('audio-ele');
   audio.addEventListener('timeupdate', timeUpdate, false);
+  audio.addEventListener('ended', next);
 
   SC.initialize({
     client_id: 'qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5',
@@ -169,11 +183,34 @@
   }
 
   function play() {
+    let playButtons = document.getElementsByClassName('play-icon');
+
     if (playing) {
       audio.pause();
+
+      for (b of playButtons) {
+        b.classList.remove('fa-pause')
+        b.classList.add('fa-play')
+      }
     } else {
       audio.play();
+
+      for (b of playButtons) {
+        b.classList.remove('fa-play')
+        b.classList.add('fa-pause')
+      }
     }
+    playing = !playing
+  }
+
+  function next() {
+    let playButtons = document.getElementsByClassName('play-icon');
+
+    for (b of playButtons) {
+      b.classList.remove('fa-pause')
+      b.classList.add('fa-play')
+    }
+
     playing = !playing
   }
 

@@ -42,10 +42,9 @@
     justify-content: space-between;
     align-items: center;
     transform: translateY(151px);
-    transition: transform 350ms ease-out;
+    transition: transform 200ms ease-out;
     transition-delay: 0;
     z-index: 1;
-    /* border-top: 3px solid var(--et-green); */
   }
 
   .full-mobile-player {
@@ -59,12 +58,9 @@
     width: 100vw;
     padding: 0;
     transform: translateY(100vh);
-    transition: transform 350ms ease-out;
+    transition: transform 200ms ease-out;
     z-index: 2;
   }
-
-  /* .fmp-img-container {
-  } */
 
   .fmp-img {
     min-width: 100%;
@@ -106,7 +102,7 @@
   }
 
   .mini-progress-bar {
-    height: 2px;
+    height: 4px;
     position: absolute;
     width: 100%;
     margin-top: -4px;
@@ -117,7 +113,7 @@
   .mini-progress-bar__bg {
     background-color: #b3b3b3;
     display: flex;
-    height: 2px;
+    height: 4px;
     width: 100%;
   }
 
