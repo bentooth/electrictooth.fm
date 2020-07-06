@@ -151,7 +151,6 @@
   }
 
   .fmp-controls-title {
-    flex-basis: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
