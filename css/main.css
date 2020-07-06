@@ -28,7 +28,6 @@
   --et-grey: #94999e;
   --et-whiteblue: #f0f7f7;
   background-color: var(--et-whiteblue);
-  color: var(--et-green);
 }
 
 @media screen and (min-width: 320px) {
@@ -91,6 +90,11 @@
 
   .playlist-header > p {
     padding-right: 32px;
+    color: var(--et-green);
+  }
+
+  .fa {
+    color: var(--et-green);
   }
 
   .playlist-item {
@@ -113,7 +117,6 @@
     font-size: 42px;
     font-family: 'Spotify-Light';
     width: 75vw;
-    color: #023436;
   }
 
   .fml-navigation {
