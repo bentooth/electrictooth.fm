@@ -34,7 +34,7 @@
         <div class="player-singer"></div>
       </div>
 
-      <div style="width: 64px; margin-right: 36px;">
+      <div style="width: 75px; margin-right: 36px;">
         <i class="play-icon fa fa-play" style="font-size: 64px;" onclick="play()"></i>
       </div>
     </div>
@@ -77,16 +77,44 @@
 
     <div class="fmp-navigation">
       <i class="fa fa-angle-down" style="font-size: 92px; margin-left: 32px;" onclick="toggleMobilePlayer()"></i>
-      <i class="fa fa-list" style="font-size: 64px; margin-right: 32px;"></i>
+      <i class="fa fa-list" style="font-size: 64px; margin-right: 32px;" onclick="toggleMobileList()"></i>
     </div>
 
   </section>
+
+  <section class="full-mobile-list" id="fml">
+    <div class="mobile-playlist" id="mp">
+      <div class="playlist-header">playlist</div>
+
+      <template>
+        <div class="playlist-item">
+          <div>
+            <img src="/images/filler.jpg" />
+          </div>
+
+          <div>
+            <p class="playlist-item-text"></p>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <div class="fml-navigation">
+      <i class="fa fa-close" style="font-size: 64px; margin-right: 48px;" onclick="toggleMobileList()"></i>
+    </div>
+  </section>
+
+
 </body>
 <script src="https://connect.soundcloud.com/sdk/sdk-3.3.2.js"></script>
 <script>
   var fullMobilePlayerShow = false;
+  var fullMobileList = false;
   var smp = document.getElementById("smp");
   var fmp = document.getElementById("fmp");
+
+  var fml = document.getElementById("fml");
+
   var pbt = document.getElementById("progress-bar__track");
   var pbp = document.getElementById("progress-bar__progress");
   pbp.style.transform = `translateX(${-100}%)`
@@ -111,20 +139,20 @@
 
   SC.get(`playlists/1064225653`).then(({ tracks }) => {
     tracks.forEach((song, i) => {
-      let me = song.title.split('-')
-      let singer = me[0].trim();
-      let title = me[1].trim();
+      // let me = song.title.split('-')
+      // let singer = me[0].trim();
+      // let title = me[1].trim();
 
       playlist.push({
         id: i,
-        title: title,
-        singer: singer,
+        title: song.title,
+        singer: "",
         cover: song.artwork_url.replace('large', 't500x500'),
         musicSrc: `${song.stream_url}?client_id=qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5`,
         duration: song.duration
       });
     })
-    initPlayer(playlist[0]);
+    initPlayer(playlist);
   });
 
   pbb.addEventListener("touchstart", (e) => moveplayhead(e));
@@ -204,8 +232,38 @@
     mpbp.style.transform = `translateX(${trackPercent}%)`
   }
 
-  function initPlayer(song) {
-    updatePlayer(song);
+  function initPlayer(playlist) {
+    updatePlayer(playlist[0]);
+    updatePlaylistPanel(playlist);
+  }
+
+  function updatePlaylistPanel(playlist) {
+    var temp, item, a, i;
+    var plist = document.getElementById('mp');
+    temp = document.getElementsByTagName("template")[0];
+    item = temp.content.querySelector("div");
+
+
+    for (i = 0; i < playlist.length; i++) {
+      //Create a new node, based on the template:
+      a = document.importNode(item, true);
+
+      a.setAttribute("onclick", `playNow(${playlist[i].id})`);
+
+      let playlistImg = a.querySelector('img');
+      playlistImg.src = playlist[i].cover;
+
+      let playlistTitle = a.querySelector('p');
+      playlistTitle.innerHTML = `${playlist[i].title}`
+
+      plist.appendChild(a)
+    }
+  }
+
+  function playNow(id) {
+    updatePlayer(playlist[id]);
+    audio.play();
+    playing = true;
   }
 
   function showPause() {
@@ -273,6 +331,16 @@
     showPause();
     audio.play();
     playing = true;
+  }
+
+  function toggleMobileList() {
+    if (fullMobileList) {
+      fml.style.transform = "translateY(100vh)"
+      fullMobileList = !fullMobileList
+    } else {
+      fml.style.transform = "translateY(0)"
+      fullMobileList = !fullMobileList
+    }
   }
 
 

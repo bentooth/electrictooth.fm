@@ -62,6 +62,74 @@
     z-index: 2;
   }
 
+  .full-mobile-list {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
+    transform: translateY(100vh);
+    transition: transform 200ms ease-out;
+    z-index: 3;
+    background-color: var(--et-whiteblue);
+  }
+
+  .playlist-header {
+    font-family: 'Spotify-Bold';
+    font-size: 96px;
+    text-align: right;
+    border-bottom: 4px solid #05aea5;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 16px 0;
+  }
+
+  .playlist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    margin-bottom: 16px;
+    font-size: 32px;
+  }
+
+  .playlist-item > div > img {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    border: 2px solid #05aea5;
+  }
+
+  .playlist-item-text {
+    font-size: 42px;
+    font-family: 'Spotify-Light';
+    width: 75vw;
+  }
+
+  .fml-navigation {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    flex-basis: 150px;
+    height: 150px;
+    justify-content: flex-end;
+    align-items: center;
+    border-top: 3px solid var(--et-green);
+    z-index: 9;
+  }
+
+  .mobile-playlist {
+    overflow-y: scroll;
+    margin-top: 132px;
+    margin-bottom: 150px;
+  }
+
   .fmp-img {
     min-width: 100%;
   }
@@ -110,6 +178,12 @@
 
   .smp-details-container {
     font-size: 54px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    width: 100%;
   }
 
   .mini-progress-bar {
