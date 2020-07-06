@@ -331,6 +331,7 @@
   }
 
   function next() {
+    previousSongId = currentSong.id;
     let next = currentSong.id + 1;
 
     if (playlist.length === next) {
@@ -346,6 +347,7 @@
   }
 
   function prev() {
+    previousSongId = currentSong.id;
     let prev = currentSong.id - 1;
 
     if (prev < 0) {
@@ -354,7 +356,6 @@
 
     updatePlayer(playlist[prev]);
     updatePanel()
-
     showPause();
     audio.play();
     playing = true;
