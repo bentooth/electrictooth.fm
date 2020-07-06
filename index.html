@@ -66,7 +66,7 @@
       </div>
 
       <div class="fmp-controls-player">
-        <i class="fa fa-step-backward" style="font-size: 64px;"></i>
+        <i class="fa fa-step-backward" style="font-size: 64px;" onclick="prev()"></i>
         <div style="width: 54px;">
           <i class="play-icon fa fa-play" style="font-size: 64px;" onclick="play()"></i>
         </div>
@@ -124,8 +124,7 @@
         duration: song.duration
       });
     })
-    console.log(playlist)
-    initPlayer();
+    initPlayer(playlist[0]);
   });
 
   pbb.addEventListener("touchstart", (e) => moveplayhead(e));
@@ -196,8 +195,6 @@
     }
   }
 
-
-
   function timeUpdate() {
     let buttonPercent = 100000 * (audio.currentTime / currentSong.duration);
     let trackPercent = buttonPercent - 100;
@@ -207,26 +204,8 @@
     mpbp.style.transform = `translateX(${trackPercent}%)`
   }
 
-  function initPlayer() {
-    let titles = document.getElementsByClassName('player-title');
-    let singer = document.getElementsByClassName('player-singer');
-    let imgs = document.getElementsByClassName('fmp-img');
-
-    currentSong = playlist[0];
-
-    audio.src = currentSong.musicSrc;
-
-    for (e of titles) {
-      e.innerHTML = currentSong.title
-
-    }
-    for (s of singer) {
-      s.innerHTML = currentSong.singer
-    }
-
-    for (i of imgs) {
-      i.src = currentSong.cover
-    }
+  function initPlayer(song) {
+    updatePlayer(song);
   }
 
   function showPause() {
@@ -247,38 +226,55 @@
     }
   }
 
-  function next() {
-
+  function updatePlayer(newSong) {
     let titles = document.getElementsByClassName('player-title');
     let singer = document.getElementsByClassName('player-singer');
     let imgs = document.getElementsByClassName('fmp-img');
 
+    audio.src = newSong.musicSrc;
+
+    for (e of titles) {
+      e.innerHTML = newSong.title
+    }
+    for (s of singer) {
+      s.innerHTML = newSong.singer
+    }
+
+    for (i of imgs) {
+      i.src = newSong.cover
+    }
+
+    currentSong = newSong;
+  }
+
+  function next() {
     let next = currentSong.id + 1;
 
     if (playlist.length === next) {
       next = 0;
     }
 
-    currentSong = playlist[next];
-
-    audio.src = currentSong.musicSrc;
-
-    for (e of titles) {
-      e.innerHTML = currentSong.title
-
-    }
-    for (s of singer) {
-      s.innerHTML = currentSong.singer
-    }
-
-    for (i of imgs) {
-      i.src = currentSong.cover
-    }
+    updatePlayer(playlist[next]);
 
     showPause();
     audio.play();
     playing = true;
   }
+
+  function prev() {
+    let prev = currentSong.id - 1;
+
+    if (prev < 0) {
+      prev = playlist.length - 1;
+    }
+
+    updatePlayer(playlist[prev]);
+
+    showPause();
+    audio.play();
+    playing = true;
+  }
+
 
   function toggleMobilePlayer() {
     if (fullMobilePlayerShow) {
