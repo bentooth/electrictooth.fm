@@ -84,7 +84,9 @@
 
   <section class="full-mobile-list" id="fml">
     <div class="mobile-playlist" id="mp">
-      <div class="playlist-header">playlist</div>
+      <div class="playlist-header">
+        <p>playlist</p>
+      </div>
 
       <template>
         <div class="playlist-item">
@@ -248,6 +250,7 @@
       //Create a new node, based on the template:
       a = document.importNode(item, true);
 
+      a.id = i;
       a.setAttribute("onclick", `playNow(${playlist[i].id})`);
 
       let playlistImg = a.querySelector('img');
@@ -262,6 +265,7 @@
 
   function playNow(id) {
     updatePlayer(playlist[id]);
+    showPause();
     audio.play();
     playing = true;
   }
