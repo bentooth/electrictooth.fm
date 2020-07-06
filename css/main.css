@@ -48,13 +48,13 @@
 
   .full-mobile-player {
     position: fixed;
-    top: 0;
     left: 0;
+    top: 0;
     bottom: 0;
+    right: 0;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    width: 100vw;
+    width: 100%;
     padding: 0;
     transform: translateY(100vh);
     transition: transform 200ms ease-out;
@@ -63,12 +63,13 @@
 
   .full-mobile-list {
     position: fixed;
-    top: 0;
     left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    width: 100vw;
+    width: 100%;
     padding: 0;
     transform: translateY(100vh);
     transition: transform 200ms ease-out;
@@ -138,8 +139,7 @@
   }
 
   .fmp-img {
-    width: 100px;
-    height: 100px;
+    width: 100%;
   }
 
   .fmp-controls-container {
