@@ -139,7 +139,8 @@
   }
 
   .fmp-img {
-    width: 100%;
+    width: 500px;
+    height: 500px;
   }
 
   .fmp-controls-container {
@@ -247,6 +248,9 @@
   }
 
   .fmp-img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex: 2;
   }
 
