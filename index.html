@@ -139,35 +139,35 @@
   audio.addEventListener('timeupdate', timeUpdate, false);
   audio.addEventListener('ended', next);
 
-  let isMobile = window.outerWidth <= 768;
+  // let isMobile = window.outerWidth <= 768;
 
-  if (isMobile && isSafari()) {
-    bindSafariAutoPlayEvents();
-  }
+  // if (isMobile && isSafari()) {
+  //   bindSafariAutoPlayEvents();
+  // }
 
-  const isSafari = () => {
-    return (
-      /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
-    );
-  };
+  // const isSafari = () => {
+  //   return (
+  //     /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
+  //   );
+  // };
 
-  const bindSafariAutoPlayEvents = () => {
-    document.addEventListener(
-      'click',
-      () => {
-        mockAutoPlayForMobile();
-      },
-      { once: true },
-    );
-  };
+  // const bindSafariAutoPlayEvents = () => {
+  //   document.addEventListener(
+  //     'click',
+  //     () => {
+  //       mockAutoPlayForMobile();
+  //     },
+  //     { once: true },
+  //   );
+  // };
 
-  const mockAutoPlayForMobile = () => {
-    if (!playing) {
-      audio.load();
-      audio.pause();
-      audio.play();
-    }
-  };
+  // const mockAutoPlayForMobile = () => {
+  //   if (!playing) {
+  //     audio.load();
+  //     audio.pause();
+  //     audio.play();
+  //   }
+  // };
 
   SC.initialize({
     client_id: 'qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5',
