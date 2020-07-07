@@ -28,17 +28,17 @@
 
     <div class="smp-control-container">
 
-      <div onclick="toggleMobilePlayer()">
+      <div onclick="ETPlayer.toggleMobilePlayer()">
         <img class="fmp-img" src="/images/filler.jpg" style="width: 150px; height: 150px" />
       </div>
 
-      <div onclick="toggleMobilePlayer()" class="smp-details-container">
+      <div onclick="ETPlayer.toggleMobilePlayer()" class="smp-details-container">
         <div class="player-title"></div>
         <div class="player-singer"></div>
       </div>
 
       <div style="width: 75px; margin-right: 36px;">
-        <i class="play-icon fa fa-play" style="font-size: 64px;" onclick="play()"></i>
+        <i class="play-icon fa fa-play" style="font-size: 64px;" onclick="ETPlayer.play()"></i>
       </div>
     </div>
 
@@ -69,18 +69,19 @@
       </div>
 
       <div class="fmp-controls-player">
-        <i class="fa fa-step-backward" style="font-size: 64px;" onclick="prev()"></i>
+        <i class="fa fa-step-backward" style="font-size: 64px;" onclick="ETPlayer.prev()"></i>
         <div style="width: 54px;">
-          <i class="play-icon fa fa-play" style="font-size: 64px;" onclick="play()"></i>
+          <i class="play-icon fa fa-play" style="font-size: 64px;" onclick="ETPlayer.play()"></i>
         </div>
-        <i class="fa fa-step-forward" style="font-size: 64px;" onclick="next()"></i>
+        <i class="fa fa-step-forward" style="font-size: 64px;" onclick="ETPlayer.next()"></i>
       </div>
 
     </div>
 
     <div class="fmp-navigation">
-      <i class="fa fa-angle-down" style="font-size: 92px; margin-left: 32px;" onclick="toggleMobilePlayer()"></i>
-      <i class="fa fa-list" style="font-size: 64px; margin-right: 32px;" onclick="toggleMobileList()"></i>
+      <i class="fa fa-angle-down" style="font-size: 92px; margin-left: 32px;"
+        onclick="ETPlayer.toggleMobilePlayer()"></i>
+      <i class="fa fa-list" style="font-size: 64px; margin-right: 32px;" onclick="ETPlayer.toggleMobileList()"></i>
     </div>
 
   </section>
@@ -105,7 +106,7 @@
     </div>
 
     <div class="fml-navigation">
-      <i class="fa fa-close" style="font-size: 64px; margin-right: 48px;" onclick="toggleMobileList()"></i>
+      <i class="fa fa-close" style="font-size: 64px; margin-right: 48px;" onclick="ETPlayer.toggleMobileList()"></i>
     </div>
   </section>
 
@@ -113,312 +114,304 @@
 </body>
 <script src="https://connect.soundcloud.com/sdk/sdk-3.3.2.js"></script>
 <script>
-  var fullMobilePlayerShow = false;
-  var fullMobileList = false;
-  var smp = document.getElementById("smp");
-  var fmp = document.getElementById("fmp");
 
-  var fml = document.getElementById("fml");
-  // zzzt
 
-  var pbt = document.getElementById("progress-bar__track");
-  var pbp = document.getElementById("progress-bar__progress");
-  pbp.style.transform = `translateX(${-100}%)`
-  var pbb = document.getElementById("progress-bar__button");
+  class ETAudioPlayer {
+    constructor() {
+      this.playlist = [];
+      this.fullMobilePlayerShow = false;
+      this.fullMobileList = false;
+      this.currentSong = {};
+      this.previousSongId = -1;
+      this.playing = false;
+      this.loading = false;
 
-  var mpbt = document.getElementById("mini-progress-bar__track");
-  var mpbp = document.getElementById("mini-progress-bar__progress");
-  mpbp.style.transform = `translateX(${-100}%)`
+      this.audio = document.getElementById('audio-ele');
+      this.playerTitle = document.getElementsByClassName('player-title');
+      this.playerSinger = document.getElementsByClassName('player-singer');
+      this.playerCover = document.getElementsByClassName('fmp-img');
 
-  var playlist = [];
-  var currentSong = {};
-  var previousSongId = -1;
-  var playing = false;
-  var loading = false;
-  var audio = document.getElementById('audio-ele');
-  audio.addEventListener('timeupdate', timeUpdate, false);
-  audio.addEventListener('ended', next);
+      this.fullPlayer = document.getElementById("fmp");
+      this.fullPlaylistPanel = document.getElementById("fml");
+      this.progressBarTrack = document.getElementById("progress-bar__track");
+      this.progressBar = document.getElementById("progress-bar__progress");
+      this.progressBarButton = document.getElementById("progress-bar__button");
 
-  // let isMobile = window.outerWidth <= 768;
+      this.playButtons = document.getElementsByClassName('play-icon');
 
-  // if (isMobile && isSafari()) {
-  //   bindSafariAutoPlayEvents();
-  // }
+      this.miniPlayer = document.getElementById("smp");
+      this.miniProgressBarTrack = document.getElementById("mini-progress-bar__track");
+      this.miniProgressBar = document.getElementById("mini-progress-bar__progress");
 
-  // const isSafari = () => {
-  //   return (
-  //     /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
-  //   );
-  // };
+      this.initializeSC();
+      this.loadPlaylistFromSC();
+      this.initProgressBars();
+      this.setEventListeners();
+    }
 
-  // const bindSafariAutoPlayEvents = () => {
-  //   document.addEventListener(
-  //     'click',
-  //     () => {
-  //       mockAutoPlayForMobile();
-  //     },
-  //     { once: true },
-  //   );
-  // };
-
-  // const mockAutoPlayForMobile = () => {
-  //   if (!playing) {
-  //     audio.load();
-  //     audio.pause();
-  //     audio.play();
-  //   }
-  // };
-
-  SC.initialize({
-    client_id: 'qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5',
-    redirect_uri: 'https://example.com/callback'
-  });
-
-  SC.get(`playlists/1064225653`).then(({ tracks }) => {
-    tracks.forEach((song, i) => {
-      // let me = song.title.split('-')
-      // let singer = me[0].trim();
-      // let title = me[1].trim();
-
-      playlist.push({
-        id: i,
-        title: song.title,
-        singer: "",
-        cover: song.artwork_url.replace('large', 't500x500'),
-        musicSrc: `${song.stream_url}?client_id=qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5`,
-        duration: song.duration
+    initializeSC() {
+      SC.initialize({
+        client_id: 'qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5',
+        redirect_uri: 'https://example.com/callback'
       });
-    })
-    initPlayer(playlist);
-  });
-
-  pbb.addEventListener("touchstart", (e) => moveplayhead(e));
-  pbb.addEventListener("touchmove", (e) => moveplayhead(e));
-  pbb.addEventListener("touchend", (e) => endTouch(e));
-
-  pbt.addEventListener("touchstart", (e) => moveplayhead(e));
-  pbt.addEventListener("touchmove", (e) => moveplayhead(e));
-  pbt.addEventListener("touchend", (e) => endTouch(e));
-
-  function moveplayhead(e) {
-    audio.removeEventListener('timeupdate', timeUpdate, false);
-    let newClient
-    if (e.touches[0].clientX) {
-      newClient = e.touches[0].clientX - pbt.getBoundingClientRect().left;
     }
 
-    if (e.clientX) {
-      newClient = e.clientX - pbt.getBoundingClientRect().left;
+    loadPlaylistFromSC() {
+      SC.get(`playlists/1064225653`).then(({ tracks }) => {
+        tracks.forEach((song, i) => {
+          // let me = song.title.split('-')
+          // let singer = me[0].trim();
+          // let title = me[1].trim();
+          this.playlist.push({
+            id: i,
+            title: song.title,
+            singer: "",
+            cover: song.artwork_url.replace('large', 't500x500'),
+            musicSrc: `${song.stream_url}?client_id=qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5`,
+            duration: song.duration
+          });
+        })
+        this.initPlayer();
+      });
     }
 
-    let newbutton = 100 * (newClient / pbt.offsetWidth);
-    let newprogress = newbutton - 100;
+    initPlayer() {
+      this.updatePlayer(this.playlist[0]);
+      this.updatePlaylistPanel();
+      this.updatePanel()
+    }
 
-    if (newbutton > 100) {
-      pbb.style.left = `${100}%`
-      pbp.style.transform = `translateX(${0}%)`
+    initProgressBars() {
+      this.progressBar.style.transform = `translateX(${-100}%)`
+      this.miniProgressBar.style.transform = `translateX(${-100}%)`
+    }
 
-      mpbp.style.transform = `translateX(${0}%)`
+    setEventListeners() {
+      this.audio.addEventListener('timeupdate', this.timeUpdate, false);
+      this.audio.addEventListener('ended', this.next);
+
+      this.progressBarButton.addEventListener("touchstart", (e) => this.moveplayhead(e));
+      this.progressBarButton.addEventListener("touchmove", (e) => this.moveplayhead(e));
+      this.progressBarButton.addEventListener("touchend", (e) => this.endTouch(e));
+
+      this.progressBarTrack.addEventListener("touchstart", (e) => this.moveplayhead(e));
+      this.progressBarTrack.addEventListener("touchmove", (e) => this.moveplayhead(e));
+      this.progressBarTrack.addEventListener("touchend", (e) => this.endTouch(e));
+    }
+
+    moveplayhead = (e) => {
+      this.audio.removeEventListener('timeupdate', this.timeUpdate, false);
+
+      let newClient
+      if (e.touches[0].clientX) {
+        newClient = e.touches[0].clientX - this.progressBarTrack.getBoundingClientRect().left;
+      }
+
+      if (e.clientX) {
+        newClient = e.clientX - this.progressBarTrack.getBoundingClientRect().left;
+      }
+
+      let newbutton = 100 * (newClient / this.progressBarTrack.offsetWidth);
+      let newprogress = newbutton - 100;
+
+      if (newbutton > 100) {
+        this.progressBarButton.style.left = `${100}%`
+        this.progressBar.style.transform = `translateX(${0}%)`
+
+        this.miniProgressBar.style.transform = `translateX(${0}%)`
+        return
+      }
+
+      if (newbutton < 0) {
+        this.progressBarButton.style.left = `${0}%`
+        this.progressBar.style.transform = `translateX(${-100}%)`
+
+        this.miniProgressBar.style.transform = `translateX(${-100}%)`
+        return
+      }
+
+      this.progressBarButton.style.left = `${newbutton}%`
+      this.progressBar.style.transform = `translateX(${newprogress}%)`
+
+      this.miniProgressBar.style.transform = `translateX(${newprogress}%)`
       return
     }
 
-    if (newbutton < 0) {
-      pbb.style.left = `${0}%`
-      pbp.style.transform = `translateX(${-100}%)`
+    timeUpdate = () => {
+      let buttonPercent = 100000 * (this.audio.currentTime / this.currentSong.duration);
+      let trackPercent = buttonPercent - 100;
+      this.progressBarButton.style.left = `${buttonPercent}%`
+      this.progressBar.style.transform = `translateX(${trackPercent}%)`
 
-      mpbp.style.transform = `translateX(${-100}%)`
-      return
+      this.miniProgressBar.style.transform = `translateX(${trackPercent}%)`
     }
 
-    pbb.style.left = `${newbutton}%`
-    pbp.style.transform = `translateX(${newprogress}%)`
-
-    mpbp.style.transform = `translateX(${newprogress}%)`
-    return
-  }
-
-  function endTouch() {
-    let buttonPositionInPercent = pbb.style.left;
-    let percentDeci = buttonPositionInPercent.substring(0, buttonPositionInPercent.length - 1);
-    percentDeci = percentDeci / 100;
-    let newCurrentTime = currentSong.duration * percentDeci
-    newCurrentTime = newCurrentTime.toFixed(0);
-    newCurrentTime = newCurrentTime / 1000
-    audio.currentTime = newCurrentTime;
-    audio.addEventListener('timeupdate', timeUpdate, false);
-  }
-
-  function play() {
-    if (playing) {
-      playing = false;
-      audio.pause();
-      showPlay();
-    } else {
-      playing = true;
-      audio.play();
-      showPause();
-      updatePanel();
+    endTouch = () => {
+      let buttonPositionInPercent = this.progressBarButton.style.left;
+      let percentDeci = buttonPositionInPercent.substring(0, buttonPositionInPercent.length - 1);
+      percentDeci = percentDeci / 100;
+      let newCurrentTime = this.currentSong.duration * percentDeci
+      newCurrentTime = newCurrentTime.toFixed(0);
+      newCurrentTime = newCurrentTime / 1000
+      this.audio.currentTime = newCurrentTime;
+      this.audio.addEventListener('timeupdate', this.timeUpdate, false);
     }
-  }
 
-  function timeUpdate() {
-    let buttonPercent = 100000 * (audio.currentTime / currentSong.duration);
-    let trackPercent = buttonPercent - 100;
-    pbb.style.left = `${buttonPercent}%`
-    pbp.style.transform = `translateX(${trackPercent}%)`
-
-    mpbp.style.transform = `translateX(${trackPercent}%)`
-  }
-
-  function updatePanel() {
-    if (currentSong.id !== previousSongId) {
-      let current = document.getElementById(currentSong.id);
-      current.style.fontWeight = 'bold'
-      current.style.color = '#05aea5'
-
-      let previous = document.getElementById(previousSongId);
-      if (previous) {
-        previous.style.fontWeight = 'normal'
-        previous.style.color = 'black'
+    play() {
+      if (this.playing) {
+        this.playing = false;
+        this.audio.pause();
+        this.showPlay();
+      } else {
+        this.playing = true;
+        this.audio.play();
+        this.showPause();
+        this.updatePanel();
       }
     }
-  }
 
-  function initPlayer(playlist) {
-    updatePlayer(playlist[0]);
-    updatePlaylistPanel(playlist);
-    updatePanel()
-  }
+    updatePanel() {
+      if (this.currentSong.id !== this.previousSongId) {
+        let current = document.getElementById(this.currentSong.id);
+        current.style.fontWeight = 'bold'
+        current.style.color = '#05aea5'
 
-  function updatePlaylistPanel(playlist) {
-    var temp, item, a, i;
-    var plist = document.getElementById('mp');
-    temp = document.getElementsByTagName("template")[0];
-    item = temp.content.querySelector("div");
-    for (i = 0; i < playlist.length; i++) {
-      //Create a new node, based on the template:
-      a = document.importNode(item, true);
-
-      a.id = i;
-      a.setAttribute("onclick", `playNow(${playlist[i].id})`);
-
-      let playlistImg = a.querySelector('img');
-      playlistImg.src = playlist[i].cover;
-
-      let playlistTitle = a.querySelector('p');
-      playlistTitle.innerHTML = `${playlist[i].title}`
-
-      plist.appendChild(a)
-    }
-  }
-
-  function playNow(id) {
-    previousSongId = currentSong.id;
-    updatePlayer(playlist[id]);
-    updatePanel()
-    showPause();
-    audio.play();
-    playing = true;
-  }
-
-  function showPause() {
-    let playButtons = document.getElementsByClassName('play-icon');
-
-    for (b of playButtons) {
-      b.classList.remove('fa-play')
-      b.classList.add('fa-pause')
-    }
-  }
-
-  function showPlay() {
-    let playButtons = document.getElementsByClassName('play-icon');
-
-    for (b of playButtons) {
-      b.classList.remove('fa-pause')
-      b.classList.add('fa-play')
-    }
-  }
-
-  function updatePlayer(newSong) {
-    let titles = document.getElementsByClassName('player-title');
-    let singer = document.getElementsByClassName('player-singer');
-    let imgs = document.getElementsByClassName('fmp-img');
-
-    audio.src = newSong.musicSrc;
-
-    for (e of titles) {
-      e.innerHTML = newSong.title
-    }
-    for (s of singer) {
-      s.innerHTML = newSong.singer
+        let previous = document.getElementById(this.previousSongId);
+        if (previous) {
+          previous.style.fontWeight = 'normal'
+          previous.style.color = 'black'
+        }
+      }
     }
 
-    for (i of imgs) {
-      i.src = newSong.cover
+    updatePlayer(newSong) {
+      this.audio.src = newSong.musicSrc;
+
+      for (let e of this.playerTitle) {
+        e.innerHTML = newSong.title
+      }
+      for (let s of this.playerSinger) {
+        s.innerHTML = newSong.singer
+      }
+      for (let i of this.playerCover) {
+        i.src = newSong.cover
+      }
+
+      this.currentSong = newSong;
     }
 
-    currentSong = newSong;
-  }
+    updatePlaylistPanel() {
+      let temp, item, a, i;
+      let plist = document.getElementById('mp');
+      temp = document.getElementsByTagName("template")[0];
+      item = temp.content.querySelector("div");
+      for (i = 0; i < this.playlist.length; i++) {
+        //Create a new node, based on the template:
+        a = document.importNode(item, true);
 
-  function next() {
-    previousSongId = currentSong.id;
-    let next = currentSong.id + 1;
+        a.id = i;
+        a.setAttribute("onclick", `ETPlayer.playNow(${this.playlist[i].id})`);
 
-    if (playlist.length === next) {
-      next = 0;
+        let playlistImg = a.querySelector('img');
+        playlistImg.src = this.playlist[i].cover;
+
+        let playlistTitle = a.querySelector('p');
+        playlistTitle.innerHTML = `${this.playlist[i].title}`
+
+        plist.appendChild(a)
+      }
     }
 
-    updatePlayer(playlist[next]);
-    updatePanel()
-
-    showPause();
-    audio.play();
-    playing = true;
-  }
-
-  function prev() {
-    previousSongId = currentSong.id;
-    let prev = currentSong.id - 1;
-
-    if (prev < 0) {
-      prev = playlist.length - 1;
+    showPause() {
+      for (let b of this.playButtons) {
+        b.classList.remove('fa-play')
+        b.classList.add('fa-pause')
+      }
     }
 
-    updatePlayer(playlist[prev]);
-    updatePanel()
-    showPause();
-    audio.play();
-    playing = true;
-  }
-
-  function toggleMobileList() {
-    if (fullMobileList) {
-      fml.style.transform = "translateY(100vh)"
-      fullMobileList = !fullMobileList
-    } else {
-      fml.style.transform = "translateY(0)"
-      fullMobileList = !fullMobileList
+    showPlay() {
+      for (let b of this.playButtons) {
+        b.classList.remove('fa-pause')
+        b.classList.add('fa-play')
+      }
     }
-  }
 
+    playNow(id) {
+      this.previousSongId = this.currentSong.id;
 
-  function toggleMobilePlayer() {
-    if (fullMobilePlayerShow) {
-      smp.style.transitionDelay = "350ms"
-      smp.style.transform = "translateY(0)"
-      fmp.style.transform = "translateY(100vh)"
-      fullMobilePlayerShow = !fullMobilePlayerShow
-    } else {
-      smp.style.transitionDelay = "0ms"
-      smp.style.transform = "translateY(160px)"
-      fmp.style.transform = "translateY(0)"
-      fullMobilePlayerShow = !fullMobilePlayerShow
+      this.updatePlayer(this.playlist[id]);
+      this.updatePanel()
+      this.showPause();
+
+      this.audio.play();
+      this.playing = true;
     }
+
+    next() {
+      this.previousSongId = this.currentSong.id;
+      let next = this.currentSong.id + 1;
+
+      if (this.playlist.length === next) {
+        next = 0;
+      }
+
+      this.updatePlayer(this.playlist[next]);
+      this.updatePanel()
+      this.showPause();
+
+      this.audio.play();
+      this.playing = true;
+    }
+
+    prev() {
+      this.previousSongId = this.currentSong.id;
+      let prev = this.currentSong.id - 1;
+
+      if (prev < 0) {
+        prev = this.playlist.length - 1;
+      }
+
+      this.updatePlayer(this.playlist[prev]);
+      this.updatePanel()
+      this.showPause();
+
+      this.audio.play();
+      this.playing = true;
+    }
+
+    toggleMobileList() {
+      if (this.fullMobileList) {
+        this.fullPlaylistPanel.style.transform = "translateY(100vh)"
+        this.fullMobileList = !this.fullMobileList
+      } else {
+        this.fullPlaylistPanel.style.transform = "translateY(0)"
+        this.fullMobileList = !this.fullMobileList
+      }
+    }
+
+
+    toggleMobilePlayer() {
+      if (this.fullMobilePlayerShow) {
+        this.miniPlayer.style.transitionDelay = "350ms"
+        this.miniPlayer.style.transform = "translateY(0)"
+        this.fullPlayer.style.transform = "translateY(100vh)"
+        this.fullMobilePlayerShow = !this.fullMobilePlayerShow
+      } else {
+        this.miniPlayer.style.transitionDelay = "0ms"
+        this.miniPlayer.style.transform = "translateY(160px)"
+        this.fullPlayer.style.transform = "translateY(0)"
+        this.fullMobilePlayerShow = !this.fullMobilePlayerShow
+      }
+    }
+
   }
+
+  const ETPlayer = new ETAudioPlayer();
 
   window.onload = function () {
-    smp.style.transform = "translateY(0)"
+    ETPlayer.miniPlayer.style.transform = "translateY(0)"
   }
+
 </script>
 
 </html>
