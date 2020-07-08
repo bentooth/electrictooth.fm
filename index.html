@@ -415,22 +415,14 @@
   }
 
   window.onpopstate = function (e) {
-
     if (window.location.hash === '#player') {
       ETPlayer.toggleMobileList();
     }
-
     if (window.location.hash === '') {
       ETPlayer.toggleMobilePlayer();
     }
   }
 
-</script>
-
-<script type="text/javascript">
-  function preventBack() { window.history.forward(); }
-  setTimeout("preventBack()", 0);
-  window.onunload = function () { null };
 </script>
 
 </html>
