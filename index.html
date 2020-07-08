@@ -384,6 +384,7 @@
         this.fullPlaylistPanel.style.transform = "translateY(100vh)"
         this.fullMobileList = !this.fullMobileList
       } else {
+        history.pushState(null, "", "/index.html#playlist");
         this.fullPlaylistPanel.style.transform = "translateY(0)"
         this.fullMobileList = !this.fullMobileList
       }
@@ -397,6 +398,7 @@
         this.fullPlayer.style.transform = "translateY(100vh)"
         this.fullMobilePlayerShow = !this.fullMobilePlayerShow
       } else {
+        history.pushState(null, "", "/index.html#player");
         this.miniPlayer.style.transitionDelay = "0ms"
         this.miniPlayer.style.transform = "translateY(160px)"
         this.fullPlayer.style.transform = "translateY(0)"
@@ -410,14 +412,25 @@
 
   window.onload = function () {
     ETPlayer.miniPlayer.style.transform = "translateY(0)"
-    document.addEventListener("deviceready", onDeviceReady, false);
   }
 
-  function onDeviceReady() {
-    // Register the event listener
-    document.addEventListener("backbutton", ETPlayer.toggleMobileList(), false);
+  window.onpopstate = function (e) {
+
+    if (window.location.hash === '#player') {
+      ETPlayer.toggleMobileList();
+    }
+
+    if (window.location.hash === '') {
+      ETPlayer.toggleMobilePlayer();
+    }
   }
 
+</script>
+
+<script type="text/javascript">
+  function preventBack() { window.history.forward(); }
+  setTimeout("preventBack()", 0);
+  window.onunload = function () { null };
 </script>
 
 </html>
