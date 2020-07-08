@@ -410,6 +410,12 @@
 
   window.onload = function () {
     ETPlayer.miniPlayer.style.transform = "translateY(0)"
+    document.addEventListener("deviceready", onDeviceReady, false);
+  }
+
+  function onDeviceReady() {
+    // Register the event listener
+    document.addEventListener("backbutton", ETPlayer.toggleMobileList(), false);
   }
 
 </script>
