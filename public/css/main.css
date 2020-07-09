@@ -1,17 +1,17 @@
 @font-face {
   font-family: 'Spotify-Bold';
-  src: url('/fonts/Spotify-Bold.woff2') format('woff2'),
-    url('/fonts/Spotify-Bold.woff') format('woff'),
-    url('/fonts/Spotify-Bold.otf') format('opentype');
+  src: url('/public/fonts/Spotify-Bold.woff2') format('woff2'),
+    url('/public/fonts/Spotify-Bold.woff') format('woff'),
+    url('/public/fonts/Spotify-Bold.otf') format('opentype');
   font-style: normal;
   font-weight: 400;
   font-display: block;
 }
 @font-face {
   font-family: 'Spotify-Light';
-  src: url('/fonts/Spotify-Light.woff2') format('woff2'),
-    url('/fonts/Spotify-Light.woff') format('woff'),
-    url('/fonts/Spotify-Light.otf') format('opentype');
+  src: url('/public/fonts/Spotify-Light.woff2') format('woff2'),
+    url('/public/fonts/Spotify-Light.woff') format('woff'),
+    url('/public/fonts/Spotify-Light.otf') format('opentype');
   font-style: normal;
   font-weight: 400;
   font-display: block;
@@ -43,7 +43,6 @@
     transform: translateY(160px);
     transition: transform 200ms ease-out;
     transition-delay: 0;
-    z-index: 1;
   }
 
   .full-mobile-player {
@@ -58,7 +57,6 @@
     padding: 0;
     transform: translateY(100vh);
     transition: transform 200ms ease-out;
-    z-index: 2;
   }
 
   .full-mobile-list {
@@ -73,7 +71,6 @@
     padding: 0;
     transform: translateY(100vh);
     transition: transform 200ms ease-out;
-    z-index: 3;
     background-color: var(--et-whiteblue);
   }
 
@@ -136,11 +133,6 @@
     overflow-y: scroll;
     margin-top: 132px;
     margin-bottom: 123px;
-  }
-
-  .fmp-img {
-    width: 600px;
-    height: 600px;
   }
 
   .fmp-controls-container {

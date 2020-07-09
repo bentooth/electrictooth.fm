@@ -4,11 +4,11 @@
 <head>
   <title>electrictooth.fm</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="css/reset.css" rel="stylesheet" />
-  <link href="css/main.css" rel="stylesheet" />
-  <link rel="icon" href="/images/favicon.ico" />
-  <link rel="apple-touch-icon" href="/images/logo192.png" />
-  <link rel="manifest" href="/manifest.json" />
+  <link href="/public/css/reset.css" rel="stylesheet" />
+  <link href="/public/css/main.css" rel="stylesheet" />
+  <link rel="icon" href="/public/images/favicon.ico" />
+  <link rel="apple-touch-icon" href="/public/images/logo192.png" />
+  <link rel="manifest" href="/public/manifest.json" />
   <meta name="theme-color" content="#05aea5" />
 </head>
 
@@ -29,7 +29,7 @@
     <div class="smp-control-container">
 
       <div onclick="ETPlayer.toggleMobilePlayer()">
-        <img class="fmp-img" src="/images/filler.jpg" style="width: 150px; height: 150px" />
+        <img class="fmp-img" src="/public/images/filler.jpg" style="width: 150px; height: 150px" />
       </div>
 
       <div onclick="ETPlayer.toggleMobilePlayer()" class="smp-details-container">
@@ -47,7 +47,7 @@
   <section class="full-mobile-player" id="fmp">
 
     <div class="fmp-img-container">
-      <img class="fmp-img" src="/images/filler.jpg" />
+      <img class="fmp-img" src="/public/images/filler.jpg" style="width: 600px; height: 600px" />
     </div>
 
     <div class="fmp-controls-container">
@@ -95,7 +95,7 @@
       <template>
         <div class="playlist-item">
           <div>
-            <img src="/images/filler.jpg" />
+            <img src="/public/images/filler.jpg" />
           </div>
 
           <div>
@@ -113,316 +113,6 @@
 
 </body>
 <script src="https://connect.soundcloud.com/sdk/sdk-3.3.2.js"></script>
-<script>
-
-
-  class ETAudioPlayer {
-    constructor() {
-      this.playlist = [];
-      this.fullMobilePlayerShow = false;
-      this.fullMobileList = false;
-      this.currentSong = {};
-      this.previousSongId = -1;
-      this.playing = false;
-      this.loading = false;
-
-      this.audio = document.getElementById('audio-ele');
-      this.playerTitle = document.getElementsByClassName('player-title');
-      this.playerSinger = document.getElementsByClassName('player-singer');
-      this.playerCover = document.getElementsByClassName('fmp-img');
-
-      this.fullPlayer = document.getElementById("fmp");
-      this.fullPlaylistPanel = document.getElementById("fml");
-      this.progressBarTrack = document.getElementById("progress-bar__track");
-      this.progressBar = document.getElementById("progress-bar__progress");
-      this.progressBarButton = document.getElementById("progress-bar__button");
-
-      this.playButtons = document.getElementsByClassName('play-icon');
-
-      this.miniPlayer = document.getElementById("smp");
-      this.miniProgressBarTrack = document.getElementById("mini-progress-bar__track");
-      this.miniProgressBar = document.getElementById("mini-progress-bar__progress");
-
-      this.initializeSC();
-      this.loadPlaylistFromSC();
-      this.initProgressBars();
-      this.setEventListeners();
-    }
-
-    initializeSC() {
-      SC.initialize({
-        client_id: 'qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5',
-        redirect_uri: 'https://example.com/callback'
-      });
-    }
-
-    loadPlaylistFromSC() {
-      SC.get(`playlists/1064225653`).then(({ tracks }) => {
-        tracks.forEach((song, i) => {
-          // let me = song.title.split('-')
-          // let singer = me[0].trim();
-          // let title = me[1].trim();
-          this.playlist.push({
-            id: i,
-            title: song.title,
-            singer: "",
-            cover: song.artwork_url.replace('large', 't500x500'),
-            musicSrc: `${song.stream_url}?client_id=qar87rq7vEGGfgjM0PqrmTBUYhSzUcQ5`,
-            duration: song.duration
-          });
-        })
-        this.initPlayer();
-      });
-    }
-
-    initPlayer() {
-      this.updatePlayer(this.playlist[0]);
-      this.updatePlaylistPanel();
-      this.updatePanel()
-    }
-
-    initProgressBars() {
-      this.progressBar.style.transform = `translateX(${-100}%)`
-      this.miniProgressBar.style.transform = `translateX(${-100}%)`
-    }
-
-    setEventListeners() {
-      this.audio.addEventListener('timeupdate', this.timeUpdate, false);
-      this.audio.addEventListener('ended', this.next);
-
-      this.progressBarButton.addEventListener("touchstart", (e) => this.moveplayhead(e));
-      this.progressBarButton.addEventListener("touchmove", (e) => this.moveplayhead(e));
-      this.progressBarButton.addEventListener("touchend", (e) => this.endTouch(e));
-
-      this.progressBarTrack.addEventListener("touchstart", (e) => this.moveplayhead(e));
-      this.progressBarTrack.addEventListener("touchmove", (e) => this.moveplayhead(e));
-      this.progressBarTrack.addEventListener("touchend", (e) => this.endTouch(e));
-    }
-
-    moveplayhead = (e) => {
-      this.audio.removeEventListener('timeupdate', this.timeUpdate, false);
-
-      let newClient
-      if (e.touches[0].clientX) {
-        newClient = e.touches[0].clientX - this.progressBarTrack.getBoundingClientRect().left;
-      }
-
-      if (e.clientX) {
-        newClient = e.clientX - this.progressBarTrack.getBoundingClientRect().left;
-      }
-
-      let newbutton = 100 * (newClient / this.progressBarTrack.offsetWidth);
-      let newprogress = newbutton - 100;
-
-      if (newbutton > 100) {
-        this.progressBarButton.style.left = `${100}%`
-        this.progressBar.style.transform = `translateX(${0}%)`
-
-        this.miniProgressBar.style.transform = `translateX(${0}%)`
-        return
-      }
-
-      if (newbutton < 0) {
-        this.progressBarButton.style.left = `${0}%`
-        this.progressBar.style.transform = `translateX(${-100}%)`
-
-        this.miniProgressBar.style.transform = `translateX(${-100}%)`
-        return
-      }
-
-      this.progressBarButton.style.left = `${newbutton}%`
-      this.progressBar.style.transform = `translateX(${newprogress}%)`
-
-      this.miniProgressBar.style.transform = `translateX(${newprogress}%)`
-      return
-    }
-
-    timeUpdate = () => {
-      let buttonPercent = 100000 * (this.audio.currentTime / this.currentSong.duration);
-      let trackPercent = buttonPercent - 100;
-      this.progressBarButton.style.left = `${buttonPercent}%`
-      this.progressBar.style.transform = `translateX(${trackPercent}%)`
-
-      this.miniProgressBar.style.transform = `translateX(${trackPercent}%)`
-    }
-
-    endTouch = () => {
-      let buttonPositionInPercent = this.progressBarButton.style.left;
-      let percentDeci = buttonPositionInPercent.substring(0, buttonPositionInPercent.length - 1);
-      percentDeci = percentDeci / 100;
-      let newCurrentTime = this.currentSong.duration * percentDeci
-      newCurrentTime = newCurrentTime.toFixed(0);
-      newCurrentTime = newCurrentTime / 1000
-      this.audio.currentTime = newCurrentTime;
-      this.audio.addEventListener('timeupdate', this.timeUpdate, false);
-    }
-
-    play() {
-      if (this.playing) {
-        this.playing = false;
-        this.audio.pause();
-        this.showPlay();
-      } else {
-        this.playing = true;
-        this.audio.play();
-        this.showPause();
-        this.updatePanel();
-      }
-    }
-
-    updatePanel() {
-      if (this.currentSong.id !== this.previousSongId) {
-        let current = document.getElementById(this.currentSong.id);
-        current.style.fontWeight = 'bold'
-        current.style.color = '#05aea5'
-
-        let previous = document.getElementById(this.previousSongId);
-        if (previous) {
-          previous.style.fontWeight = 'normal'
-          previous.style.color = 'black'
-        }
-      }
-    }
-
-    updatePlayer(newSong) {
-      this.audio.src = newSong.musicSrc;
-
-      for (let e of this.playerTitle) {
-        e.innerHTML = newSong.title
-      }
-      for (let s of this.playerSinger) {
-        s.innerHTML = newSong.singer
-      }
-      for (let i of this.playerCover) {
-        i.src = newSong.cover
-      }
-
-      this.currentSong = newSong;
-    }
-
-    updatePlaylistPanel() {
-      let temp, item, a, i;
-      let plist = document.getElementById('mp');
-      temp = document.getElementsByTagName("template")[0];
-      item = temp.content.querySelector("div");
-      for (i = 0; i < this.playlist.length; i++) {
-        //Create a new node, based on the template:
-        a = document.importNode(item, true);
-
-        a.id = i;
-        a.setAttribute("onclick", `ETPlayer.playNow(${this.playlist[i].id})`);
-
-        let playlistImg = a.querySelector('img');
-        playlistImg.src = this.playlist[i].cover;
-
-        let playlistTitle = a.querySelector('p');
-        playlistTitle.innerHTML = `${this.playlist[i].title}`
-
-        plist.appendChild(a)
-      }
-    }
-
-    showPause() {
-      for (let b of this.playButtons) {
-        b.classList.remove('fa-play')
-        b.classList.add('fa-pause')
-      }
-    }
-
-    showPlay() {
-      for (let b of this.playButtons) {
-        b.classList.remove('fa-pause')
-        b.classList.add('fa-play')
-      }
-    }
-
-    playNow(id) {
-      this.previousSongId = this.currentSong.id;
-
-      this.updatePlayer(this.playlist[id]);
-      this.updatePanel()
-      this.showPause();
-
-      this.audio.play();
-      this.playing = true;
-    }
-
-    next() {
-      this.previousSongId = this.currentSong.id;
-      let next = this.currentSong.id + 1;
-
-      if (this.playlist.length === next) {
-        next = 0;
-      }
-
-      this.updatePlayer(this.playlist[next]);
-      this.updatePanel()
-      this.showPause();
-
-      this.audio.play();
-      this.playing = true;
-    }
-
-    prev() {
-      this.previousSongId = this.currentSong.id;
-      let prev = this.currentSong.id - 1;
-
-      if (prev < 0) {
-        prev = this.playlist.length - 1;
-      }
-
-      this.updatePlayer(this.playlist[prev]);
-      this.updatePanel()
-      this.showPause();
-
-      this.audio.play();
-      this.playing = true;
-    }
-
-    toggleMobileList() {
-      if (this.fullMobileList) {
-        this.fullPlaylistPanel.style.transform = "translateY(100vh)"
-        this.fullMobileList = !this.fullMobileList
-      } else {
-        history.pushState(null, "", "/index.html#playlist");
-        this.fullPlaylistPanel.style.transform = "translateY(0)"
-        this.fullMobileList = !this.fullMobileList
-      }
-    }
-
-
-    toggleMobilePlayer() {
-      if (this.fullMobilePlayerShow) {
-        this.miniPlayer.style.transitionDelay = "350ms"
-        this.miniPlayer.style.transform = "translateY(0)"
-        this.fullPlayer.style.transform = "translateY(100vh)"
-        this.fullMobilePlayerShow = !this.fullMobilePlayerShow
-      } else {
-        history.pushState(null, "", "/index.html#player");
-        this.miniPlayer.style.transitionDelay = "0ms"
-        this.miniPlayer.style.transform = "translateY(160px)"
-        this.fullPlayer.style.transform = "translateY(0)"
-        this.fullMobilePlayerShow = !this.fullMobilePlayerShow
-      }
-    }
-
-  }
-
-  const ETPlayer = new ETAudioPlayer();
-
-  window.onload = function () {
-    ETPlayer.miniPlayer.style.transform = "translateY(0)"
-  }
-
-  window.onpopstate = function (e) {
-    if (window.location.hash === '#player') {
-      ETPlayer.toggleMobileList();
-    }
-    if (window.location.hash === '') {
-      ETPlayer.toggleMobilePlayer();
-    }
-  }
-
-</script>
+<script src="/public/js/etc.js"></script>
 
 </html>
