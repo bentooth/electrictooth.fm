@@ -284,6 +284,7 @@ class ETAudioPlayer {
 
   toggleMobileList() {
     if (this.fullMobileList) {
+      history.replaceState(null, '', '/index.html#player');
       this.fullPlaylistPanel.style.transform = 'translateY(100vh)';
       this.fullMobileList = !this.fullMobileList;
     } else {
@@ -295,6 +296,7 @@ class ETAudioPlayer {
 
   toggleMobilePlayer() {
     if (this.fullMobilePlayerShow) {
+      history.pushState(null, '', '/index.html');
       this.miniPlayer.style.transitionDelay = '350ms';
       this.miniPlayer.style.transform = 'translateY(0)';
       this.fullPlayer.style.transform = 'translateY(100vh)';
