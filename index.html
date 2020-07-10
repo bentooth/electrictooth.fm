@@ -15,7 +15,6 @@
 <body>
   <audio id="audio-ele" type='audio/mpeg'></audio>
 
-
   <section class="small-mobile-player" id="smp">
 
     <div class="mini-progress-bar">
@@ -110,9 +109,45 @@
     </div>
   </section>
 
+  <section class="desktop-player">
+
+    <div class="desktop-player__details">
+      <img class="fmp-img" src="/public/images/filler.jpg" style="width: 60px; height: 60px;" />
+      <div>
+        <p class="player-title"></p>
+        <p class="player-singer"></p>
+      </div>
+    </div>
+
+
+    <div class="desktop-player__controls">
+
+      <div class="desktop-player__controls_buttons">
+        <i class="fa fa-step-backward" style="font-size: 24px;" onclick="ETPlayer.prev()"></i>
+        <div><i class="play-icon fa fa-play" style="font-size: 24px;" onclick="ETPlayer.play()"></i></div>
+        <i class="fa fa-step-forward" style="font-size: 24px;" onclick="ETPlayer.next()"></i>
+      </div>
+
+
+      <div class="desktop-player__controls_slider">
+        <div class="desktop-player__progress-bar__bg" id="desktop-player__progress-bar_track">
+          <div class="desktop-player__progress-bar__fg_wrapper">
+            <div class="desktop-player__progress-bar__fg" id="desktop-player__progress-bar_progress"></div>
+            <button class="desktop-player__progress-bar__slider" id="desktop-player__progress-bar_button"></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="desktop-player__playlist">
+      <i class="fa fa-list" style="font-size: 32px;" onclick="ETPlayer.toggleMobileList()"></i>
+    </div>
+  </section>
 
 </body>
 <script src="https://connect.soundcloud.com/sdk/sdk-3.3.2.js"></script>
 <script src="/public/js/ET.js"></script>
+
 
 </html>
