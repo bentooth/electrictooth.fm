@@ -306,14 +306,14 @@
     min-height: 90px;
     justify-content: space-between;
     align-items: center;
-    background-color: blanchedalmond;
+    border: 1px solid var(--et-green);
   }
 
   .desktop-player__details {
     display: flex;
-    justify-content: center;
     align-items: center;
     flex: 1;
+    padding: 0 32px;
   }
 
   .player-title {
@@ -367,7 +367,8 @@
   .desktop-player__playlist {
     display: flex;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-end;
+    padding: 0 32px;
   }
 
   .desktop-player__progress-bar__slider {

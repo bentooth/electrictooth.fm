@@ -7,6 +7,7 @@ class ETAudioPlayer {
     this.previousSongId = -1;
     this.playing = false;
     this.loading = false;
+    this.moving = false;
 
     this.audio = document.getElementById('audio-ele');
     this.playerTitle = document.getElementsByClassName('player-title');
@@ -88,41 +89,58 @@ class ETAudioPlayer {
     this.audio.addEventListener('timeupdate', this.timeUpdate, false);
     this.audio.addEventListener('ended', this.next);
 
-    this.progressBarButton.addEventListener('touchstart', (e) =>
-      this.touchplayhead(e),
+    //mobile
+    this.progressBarButton.addEventListener(
+      'touchstart',
+      (e) => this.touchplayhead(e),
+      { passive: true },
     );
-    this.progressBarButton.addEventListener('touchmove', (e) =>
-      this.touchplayhead(e),
+    this.progressBarButton.addEventListener(
+      'touchmove',
+      (e) => this.touchplayhead(e),
+      { passive: true },
     );
     this.progressBarButton.addEventListener('touchend', (e) =>
       this.endTouch(e),
     );
 
-    this.progressBarTrack.addEventListener('touchstart', (e) =>
-      this.touchplayhead(e),
+    this.progressBarTrack.addEventListener(
+      'touchstart',
+      (e) => this.touchplayhead(e),
+      { passive: true },
     );
-    this.progressBarTrack.addEventListener('touchmove', (e) =>
-      this.touchplayhead(e),
+    this.progressBarTrack.addEventListener(
+      'touchmove',
+      (e) => this.touchplayhead(e),
+      { passive: true },
     );
     this.progressBarTrack.addEventListener('touchend', (e) => this.endTouch(e));
 
-    this.DesktopProgressBarTrack.addEventListener('mousedown', (e) =>
-      this.mouseDown(e),
-    );
+    //desktop
+
+    this.DesktopProgressBarTrack.addEventListener('mousedown', this.mouseDown);
+
     this.DesktopProgressBarTrack.addEventListener('mouseup', (e) =>
       this.mouseUp(e),
     );
+    this.DesktopProgressBarButton.addEventListener('mousedown', this.mouseDown);
+
+    document.addEventListener('mouseup', this.mouseUp);
   }
 
-  mouseDown = (e) => {
+  mouseDown = () => {
+    this.moving = true;
+    document.addEventListener('mousemove', this.moveplayhead, true);
     this.audio.removeEventListener('timeupdate', this.timeUpdate, false);
+  };
 
+  moveplayhead = (e) => {
     let shiftX =
       e.clientX - this.DesktopProgressBarTrack.getBoundingClientRect().left;
 
     let newButtonPosition =
       100 * (shiftX / this.DesktopProgressBarTrack.offsetWidth);
-    let newpProgressBarPosition = newButtonPosition - 100;
+    let newProgressBarPosition = newButtonPosition - 100;
 
     if (newButtonPosition > 100) {
       this.DesktopProgressBarButton.style.left = `${100}%`;
@@ -138,24 +156,30 @@ class ETAudioPlayer {
     }
 
     this.DesktopProgressBarButton.style.left = `${newButtonPosition}%`;
-    this.DesktopProgressBar.style.transform = `translateX(${newpProgressBarPosition}%)`;
+    this.DesktopProgressBar.style.transform = `translateX(${newProgressBarPosition}%)`;
     return;
   };
 
-  mouseUp = () => {
-    let buttonPositionInPercent = this.DesktopProgressBarButton.style.left;
+  mouseUp = (e) => {
+    if (this.moving) {
+      this.moveplayhead(e);
+      document.removeEventListener('mousemove', this.moveplayhead, true);
 
-    let percentDeci = buttonPositionInPercent.substring(
-      0,
-      buttonPositionInPercent.length - 1,
-    );
+      let buttonPositionInPercent = this.DesktopProgressBarButton.style.left;
 
-    percentDeci = percentDeci / 100;
-    let newCurrentTime = this.currentSong.duration * percentDeci;
-    newCurrentTime = newCurrentTime.toFixed(0);
-    newCurrentTime = newCurrentTime / 1000;
-    this.audio.currentTime = newCurrentTime;
-    this.audio.addEventListener('timeupdate', this.timeUpdate, false);
+      let percentDeci = buttonPositionInPercent.substring(
+        0,
+        buttonPositionInPercent.length - 1,
+      );
+      percentDeci = percentDeci / 100;
+      let newCurrentTime = this.currentSong.duration * percentDeci;
+      newCurrentTime = newCurrentTime.toFixed(0);
+      newCurrentTime = newCurrentTime / 1000;
+      this.audio.currentTime = newCurrentTime;
+      this.audio.addEventListener('timeupdate', this.timeUpdate, false);
+    }
+
+    this.moving = false;
   };
 
   touchplayhead = (e) => {
@@ -394,109 +418,73 @@ window.onpopstate = function () {
 };
 
 /*
-    this.DesktopProgressBarTrack.addEventListener('mousedown', (e) =>
-      this.moveplayhead(e),
-    );
-    this.DesktopProgressBarTrack.addEventListener('mousemove', (e) =>
-      this.moveplayhead(e),
-    );
-
-    this.DesktopProgressBarTrack.addEventListener('dragstart', () => false);
-
-    this.DesktopProgressBarTrack.addEventListener('mouseup', (e) =>
-      this.endTouch(e),
-    );
-
-    this.DesktopProgressBarButton.addEventListener('mousedown', (e) =>
-      this.moveplayhead(e),
-    );
-
-    this.DesktopProgressBarButton.addEventListener('mousedown', (e) =>
-      this.mouseDown(e),
-    );
-
-    this.DesktopProgressBarButton.addEventListener('mouseup', (e) =>
-      this.mouseUp(e),
-    );
-
-    this.DesktopProgressBarButton.addEventListener('dragstart', () => false);
     
-      mouseDown = (e) => {
-    e.preventDefault();
+        this.DesktopProgressBarButton.addEventListener('mousedown', this.mouseDown);
+
+    window.addEventListener('mouseup', this.mouseUp);
+    
+  mouseDown = () => {
+    this.moving = true;
+    window.addEventListener('mousemove', this.moveplayhead.bind(this), true);
     this.audio.removeEventListener('timeupdate', this.timeUpdate, false);
-
-    let shiftX =
-      e.clientX - this.DesktopProgressBarButton.getBoundingClientRect().left;
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-
-    function onMouseMove(e) {
-      let buttonShiftX =
-        e.clientX -
-        shiftX -
-        this.DesktopProgressBarTrack.getBoundingClientRect().left;
-
-      let buttonShiftX =
-        100 * (shiftX / this.DesktopProgressBarTrack.offsetWidth);
-
-      if (buttonShiftX > 100) {
-        this.DesktopProgressBarButton.style.left = `${100}%`;
-        return;
-      }
-
-      if (buttonShiftX < 0) {
-        this.DesktopProgressBarButton.style.left = `${0}%`;
-        return;
-      }
-      this.DesktopProgressBarButton.style.left = `${buttonShiftX}%`;
-    }
-
-    function onMouseUp() {
-      document.removeEventListener('mouseup', onMouseUp);
-      document.removeEventListener('mousemove', onMouseMove);
-    }
   };
 
-  mouseMove(e) {
+  moveplayhead(e) {
     let shiftX =
       e.clientX - this.DesktopProgressBarTrack.getBoundingClientRect().left;
 
-    let buttonShiftX =
+    let newButtonPosition =
       100 * (shiftX / this.DesktopProgressBarTrack.offsetWidth);
+    let newProgressBarPosition = newButtonPosition - 100;
 
-    if (buttonShiftX > 100) {
+    if (newButtonPosition > 100) {
       this.DesktopProgressBarButton.style.left = `${100}%`;
+      this.DesktopProgressBar.style.transform = `translateX(${0}%)`;
       return;
     }
 
-    if (buttonShiftX < 0) {
+    if (newButtonPosition < 0) {
       this.DesktopProgressBarButton.style.left = `${0}%`;
+      this.DesktopProgressBar.style.transform = `translateX(${-100}%)`;
+
       return;
     }
-    this.DesktopProgressBarButton.style.left = `${buttonShiftX}%`;
+
+    this.DesktopProgressBarButton.style.left = `${newButtonPosition}%`;
+    this.DesktopProgressBar.style.transform = `translateX(${newProgressBarPosition}%)`;
     return;
   }
 
-  mouseUp = () => {
-    this.DesktopProgressBarButton.removeEventListener('mousemove', (e) =>
-      this.mouseMove(e),
-    );
+  mouseUp = (e) => {
+    console.log(this.moving);
+    if (this.moving) {
+      this.moveplayhead(e);
+
+      window.removeEventListener(
+        'mousemove',
+        this.moveplayhead.bind(this),
+        true,
+      );
+
+      let buttonPositionInPercent = this.DesktopProgressBarButton.style.left;
+
+      let percentDeci = buttonPositionInPercent.substring(
+        0,
+        buttonPositionInPercent.length - 1,
+      );
+      percentDeci = percentDeci / 100;
+      let newCurrentTime = this.currentSong.duration * percentDeci;
+      newCurrentTime = newCurrentTime.toFixed(0);
+      newCurrentTime = newCurrentTime / 1000;
+      this.audio.currentTime = newCurrentTime;
+      this.audio.addEventListener(
+        'timeupdate',
+        this.timeUpdate.bind(this),
+        false,
+      );
+    }
+
+    this.moving = false;
   };
 
-    mouseUp = () => {
-    let buttonPositionInPercent = this.DesktopProgressBarButton.style.left;
-
-    let percentDeci = buttonPositionInPercent.substring(
-      0,
-      buttonPositionInPercent.length - 1,
-    );
-    percentDeci = percentDeci / 100;
-    let newCurrentTime = this.currentSong.duration * percentDeci;
-    newCurrentTime = newCurrentTime.toFixed(0);
-    newCurrentTime = newCurrentTime / 1000;
-    this.audio.currentTime = newCurrentTime;
-    this.audio.addEventListener('timeupdate', this.timeUpdate, false);
-  };
-    
-    */
+*/
