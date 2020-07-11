@@ -37,7 +37,6 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-
 }
 #vidtop-content {
   top: 0;
@@ -47,7 +46,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 30%;
+  width: 33%;
   background: rgba(0, 0, 0, 0.3);
   color: #fff;
   padding: 1rem;
@@ -60,7 +59,7 @@
   margin-top: 0;
   line-height: 1.2;
   font-family: 'Spotify-Bold';
-  color: var(--et-green)
+  color: var(--et-green);
 }
 .vid-info p {
   font-family: 'Spotify-Light';
@@ -130,6 +129,17 @@
     transition-delay: 0;
     background-color: var(--et-whiteblue);
     opacity: 0.8;
+  }
+
+  .vid-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 33%;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    padding: 1rem;
+    font-family: Avenir, Helvetica, sans-serif;
   }
 
   .full-mobile-player {
@@ -384,6 +394,17 @@
 @media screen and (min-width: 1440px) {
   .small-mobile-player {
     display: none;
+  }
+
+  .vid-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30%;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    padding: 1rem;
+    font-family: Avenir, Helvetica, sans-serif;
   }
 
   .full-mobile-list {
