@@ -1,3 +1,5 @@
+
+
 @font-face {
   font-family: 'Spotify-Bold';
   src: url('/public/fonts/Spotify-Bold.woff2') format('woff2'),
@@ -15,6 +17,89 @@
   font-style: normal;
   font-weight: 400;
   font-display: block;
+}
+
+* {
+  box-sizing: border-box;
+}
+.video-background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -99;
+}
+.video-foreground,
+.video-background iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+#vidtop-content {
+  top: 0;
+  color: #fff;
+}
+.vid-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30%;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  padding: 1rem;
+  font-family: Avenir, Helvetica, sans-serif;
+}
+
+.vid-info h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0;
+  line-height: 1.2;
+  font-family: 'Spotify-Bold';
+  color: var(--et-green)
+}
+.vid-info p {
+  font-family: 'Spotify-Light';
+}
+.vid-info a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.5);
+  transition: 0.6s background;
+  border-bottom: none;
+  margin: 1rem auto;
+  text-align: center;
+}
+@media (min-aspect-ratio: 16/9) {
+  .video-foreground {
+    height: 300%;
+    top: -100%;
+  }
+}
+@media (max-aspect-ratio: 16/9) {
+  .video-foreground {
+    width: 300%;
+    left: -100%;
+  }
+}
+@media all and (max-width: 600px) {
+  .vid-info {
+    width: 50%;
+    padding: 0.5rem;
+  }
+  .vid-info h1 {
+    margin-bottom: 0.2rem;
+  }
+}
+@media all and (max-width: 500px) {
+  .vid-info .acronym {
+    display: none;
+  }
 }
 
 .middle-align {
@@ -43,6 +128,8 @@
     transform: translateY(160px);
     transition: transform 200ms ease-out;
     transition-delay: 0;
+    background-color: var(--et-whiteblue);
+    opacity: 0.8;
   }
 
   .full-mobile-player {
@@ -57,6 +144,8 @@
     padding: 0;
     transform: translateY(100vh);
     transition: transform 200ms ease-out;
+    background-color: var(--et-whiteblue);
+    opacity: 0.8;
   }
 
   .full-mobile-list {
@@ -191,7 +280,7 @@
     height: 6px;
     position: absolute;
     width: 100%;
-    margin-top: -8px;
+    margin-top: -6px;
     top: 0;
     left: 0;
   }
@@ -312,6 +401,8 @@
     background-color: var(--et-whiteblue);
     border: 1px solid var(--et-green);
     height: 52vh;
+    background-color: var(--et-whiteblue);
+    opacity: 0.8;
   }
 
   .playlist-header {
@@ -381,6 +472,7 @@
     justify-content: space-between;
     align-items: center;
     border: 1px solid var(--et-green);
+    background-color: var(--et-whiteblue);
   }
 
   .desktop-player__details {
