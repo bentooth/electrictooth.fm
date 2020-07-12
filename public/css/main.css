@@ -46,11 +46,8 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 33%;
-  background: rgba(0, 0, 0, 0.3);
   color: #fff;
   padding: 1rem;
-  font-family: Avenir, Helvetica, sans-serif;
 }
 
 .vid-info h1 {
@@ -135,8 +132,6 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 37%;
-    background: rgba(0, 0, 0, 0.3);
     color: #fff;
     padding: 1rem;
     font-family: Avenir, Helvetica, sans-serif;
@@ -400,8 +395,6 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 30%;
-    background: rgba(0, 0, 0, 0.3);
     color: #fff;
     padding: 1rem;
     font-family: Avenir, Helvetica, sans-serif;
