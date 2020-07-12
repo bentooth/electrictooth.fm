@@ -56,10 +56,12 @@
   margin-top: 0;
   line-height: 1.2;
   font-family: 'Spotify-Bold';
-  color: var(--et-green);
+  color: var(--et-whiteblue);
+  opacity: 0.8;
 }
 .vid-info p {
   font-family: 'Spotify-Light';
+  opacity: 0.8;
 }
 .vid-info a {
   display: block;
