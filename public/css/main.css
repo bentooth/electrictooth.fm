@@ -169,7 +169,7 @@
     flex-direction: column;
     width: 100%;
     padding: 0;
-    transform: translateY(100vh);
+    transform: translateY(200vh);
     transition: transform 200ms ease-out;
     background-color: var(--et-whiteblue);
     opacity: 0.8;
@@ -408,7 +408,7 @@
 @media screen and (min-width: 768px) {
 }
 
-@media screen and (min-width: 1440px) {
+@media screen and (min-width: 768px) {
   .small-mobile-player {
     display: none;
   }

@@ -647,7 +647,7 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
           history.pushState(null, '', '/index.html');
           this.miniPlayer.style.transitionDelay = '350ms';
           this.miniPlayer.style.transform = 'translateY(0)';
-          this.fullPlayer.style.transform = 'translateY(100vh)';
+          this.fullPlayer.style.transform = 'translateY(200vh)';
           this.fullMobilePlayerShow = !this.fullMobilePlayerShow;
         } else {
           history.pushState(null, '', '/index.html#player');
