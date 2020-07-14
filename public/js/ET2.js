@@ -131,13 +131,13 @@ class ETAudioPlayer {
 
     document.addEventListener('keypress', (e) => this.handleSpace(e));
 
-    //window.addEventListener('resize', () => this.closeOnResize())
+    window.addEventListener('resize', () => this.handleResize(), true);
 
   }
 
-  // closeOnResize = () => {
-  //   this.toggleMobileList();
-  // }
+  handleResize = () => {
+    console.log('ok')
+  }
 
   handleSpace = (e) => { 
     if (e.code === 'Space') {
@@ -301,9 +301,9 @@ class ETAudioPlayer {
     for (let e of this.playerTitle) {
       e.innerHTML = newSong.title;
     }
-    for (let s of this.playerSinger) {
-      s.innerHTML = newSong.singer;
-    }
+    // for (let s of this.playerSinger) {
+    //   s.innerHTML = newSong.singer;
+    // }
     for (let i of this.playerCover) {
       i.src = newSong.cover;
     }
