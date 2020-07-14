@@ -413,6 +413,10 @@
     display: none;
   }
 
+  .full-mobile-player {
+    display: none;
+  }
+
   .vid-info {
     position: absolute;
     top: 0;

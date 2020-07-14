@@ -2,7 +2,7 @@ class ETAudioPlayer {
   constructor() {
     this.playlist = [];
     this.fullMobilePlayerShow = false;
-    this.fullMobileList = false;
+    this.fullMobileListShow = false;
     this.currentSong = {};
     this.previousSongId = -1;
     this.playing = false;
@@ -59,9 +59,6 @@ class ETAudioPlayer {
   loadPlaylistFromSC() {
     SC.get(`playlists/1064225653`).then(({ tracks }) => {
       tracks.forEach((song, i) => {
-        // let me = song.title.split('-')
-        // let singer = me[0].trim();
-        // let title = me[1].trim();
         this.playlist.push({
           id: i,
           title: song.title,
@@ -133,10 +130,17 @@ class ETAudioPlayer {
     document.addEventListener('mouseup', this.mouseUp);
 
     document.addEventListener('keypress', (e) => this.handleSpace(e));
+
+    //window.addEventListener('resize', () => this.closeOnResize())
+
   }
 
+  // closeOnResize = () => {
+  //   this.toggleMobileList();
+  // }
+
   handleSpace = (e) => { 
-    if(e.code === 'Space') {
+    if (e.code === 'Space') {
       this.play();
     }
   }
@@ -387,14 +391,14 @@ class ETAudioPlayer {
   }
 
   toggleMobileList() {
-    if (this.fullMobileList) {
+    if (this.fullMobileListShow) {
       history.replaceState(null, '', '/index.html#player');
       this.fullPlaylistPanel.style.transform = 'translateY(100vh)';
-      this.fullMobileList = !this.fullMobileList;
+      this.fullMobileListShow = !this.fullMobileListShow;
     } else {
       history.pushState(null, '', '/index.html#playlist');
       this.fullPlaylistPanel.style.transform = 'translateY(0)';
-      this.fullMobileList = !this.fullMobileList;
+      this.fullMobileListShow = !this.fullMobileListShow;
     }
   }
 
