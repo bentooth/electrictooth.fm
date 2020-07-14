@@ -131,6 +131,14 @@ class ETAudioPlayer {
     this.DesktopProgressBarButton.addEventListener('mousedown', this.mouseDown);
 
     document.addEventListener('mouseup', this.mouseUp);
+
+    document.addEventListener('keypress', (e) => this.handleSpace(e));
+  }
+
+  handleSpace = (e) => { 
+    if(e.code === 'Space') {
+      this.play();
+    }
   }
 
   mouseDown = () => {
