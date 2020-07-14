@@ -40,18 +40,18 @@
 
   <!-- <img class="mascot" src="/public/images/mascot.jpg" style="width: 50px; height: 50px" alt="mascot" /> -->
 
-    <div class="video-background">
-      <div class="video-foreground">
-        <div id="player"></div>
-      </div>
+  <div class="video-background">
+    <div class="video-foreground">
+      <div id="player"></div>
     </div>
-    
-    <div id="vidtop-content">
-      <div class="vid-info">
-        <h1>Electric Tooth FM</h1>
-        <p>Welcome and please enjoy the music :)</p>
-      </div>
+  </div>
+
+  <div id="vidtop-content">
+    <div class="vid-info">
+      <h1>Electric Tooth FM</h1>
+      <p>Welcome and please enjoy the music :)</p>
     </div>
+  </div>
 
   <section class="small-mobile-player" id="smp">
 
@@ -150,43 +150,44 @@
 
   <section class="desktop-player">
 
-    <div class="desktop-player__details">
+    <section class="desktop-player__details">
       <img class="fmp-img" src="/public/images/filler.jpg" style="width: 60px; height: 60px;"
         alt="desktop player album cover" />
       <div>
         <p class="player-title"></p>
         <p class="player-singer"></p>
       </div>
-    </div>
+    </section>
 
+    <section class="desktop-player__container__controls">
+      <div class="desktop-player__controls">
+        <div class="desktop-player__controls_buttons">
+          <i class="fa fa-step-backward" style="font-size: 24px;" onclick="ETPlayer.prev()"></i>
+          <div><i class="play-icon fa fa-play" style="font-size: 24px;" onclick="ETPlayer.play()"></i></div>
+          <i class="fa fa-step-forward" style="font-size: 24px;" onclick="ETPlayer.next()"></i>
+        </div>
 
-    <div class="desktop-player__controls">
-
-      <div class="desktop-player__controls_buttons">
-        <i class="fa fa-step-backward" style="font-size: 24px;" onclick="ETPlayer.prev()"></i>
-        <div><i class="play-icon fa fa-play" style="font-size: 24px;" onclick="ETPlayer.play()"></i></div>
-        <i class="fa fa-step-forward" style="font-size: 24px;" onclick="ETPlayer.next()"></i>
-      </div>
-
-      <div class="desktop-player__controls_slider">
-        <div class="desktop-player__progress-bar__bg" id="desktop-player__progress-bar_track">
-          <div class="desktop-player__progress-bar__fg_wrapper">
-            <div class="desktop-player__progress-bar__fg" id="desktop-player__progress-bar_progress"></div>
-            <button class="desktop-player__progress-bar__slider" id="desktop-player__progress-bar_button"></button>
+        <div class="desktop-player__controls_slider">
+          <div class="desktop-player__progress-bar__bg" id="desktop-player__progress-bar_track">
+            <div class="desktop-player__progress-bar__fg_wrapper">
+              <div class="desktop-player__progress-bar__fg" id="desktop-player__progress-bar_progress"></div>
+              <button class="desktop-player__progress-bar__slider" id="desktop-player__progress-bar_button"></button>
+            </div>
           </div>
         </div>
       </div>
+    </section>
 
-    </div>
-
-    <div class="desktop-player__playlist">
+    <section class="desktop-player__playlist_volume">
+      <input type="range" id="vol-control" name="volume" min="0" max="100" value="100">
       <i class="fa fa-list" style="font-size: 32px;" onclick="ETPlayer.toggleMobileList()"></i>
-    </div>
+    </section>
+
   </section>
 
 </body>
 <script src="https://connect.soundcloud.com/sdk/sdk-3.3.2.js"></script>
-<script src="/public/js/ET.js"></script>
+<script src="/public/js/ET2.js"></script>
 <script src="/public/js/videobg.js"></script>
 
 <script>
