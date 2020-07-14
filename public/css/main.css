@@ -156,6 +156,12 @@
 
 .fa {
   color: var(--et-green);
+  cursor: pointer;
+}
+
+.playlist-icon {
+  font-size: 32px;
+  padding: 0 16px;
 }
 
 .playlist-item {
@@ -352,14 +358,13 @@
   display: none;
 }
 
-/* Small (sm) */
 @media screen and (min-width: 640px) {
 }
-/* Medium (md) */
+
 @media screen and (min-width: 768px) {
 }
-/* Large (lg) */
-@media screen and (min-width: 1024px) {
+
+@media screen and (min-width: 840px) {
   .small-mobile-player {
     display: none;
   }
@@ -385,7 +390,7 @@
     right: 0;
     display: flex;
     flex-direction: column;
-    width: 34%;
+    width: 60%;
     padding: 0;
     transform: translateY(100vh);
     transition: transform 200ms ease-out;
@@ -439,7 +444,7 @@
   .playlist-item-text {
     font-size: 16px;
     font-family: 'Spotify-Light';
-    width: 24vw;
+    width: 100%;
   }
 
   .fml-navigation {
@@ -477,7 +482,7 @@
     font-family: 'Spotify-Bold';
     color: #023436;
     text-align: center;
-    font-size: 0.8em;
+    font-size: 12px;
   }
 
   .desktop-player__container__controls {
@@ -548,8 +553,8 @@
     align-items: center;
   }
 }
-/* Extra Large (xl) */
-@media screen and (min-width: 1280px) {
+
+@media screen and (min-width: 1024px) {
   .small-mobile-player {
     display: none;
   }
@@ -559,4 +564,30 @@
     font-family: 'Spotify-Light';
     width: 26vw;
   }
+
+  .full-mobile-list {
+    position: fixed;
+    left: unset;
+    top: unset;
+    bottom: 91px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    padding: 0;
+    transform: translateY(100vh);
+    transition: transform 200ms ease-out;
+    background-color: var(--et-whiteblue);
+    border: 1px solid var(--et-green);
+    height: 52vh;
+    opacity: 0.8;
+  }
+
+  .playlist-icon {
+    font-size: 32px;
+    padding: 0;
+  }
+}
+
+@media screen and (min-width: 1280px) {
 }
