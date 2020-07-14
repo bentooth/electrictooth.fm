@@ -125,10 +125,6 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
 
     _classCallCheck(this, ETAudioPlayer);
 
-    _defineProperty(this, 'handleResize', function () {
-      console.log('ok');
-    });
-
     _defineProperty(this, 'handleSpace', function (e) {
       if (e.code === 'Space') {
         _this.play();
@@ -457,13 +453,6 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
         document.addEventListener('keypress', function (e) {
           return _this3.handleSpace(e);
         });
-        window.addEventListener(
-          'resize',
-          function () {
-            return _this3.handleResize();
-          },
-          true,
-        );
       },
     },
     {
@@ -646,7 +635,7 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
       key: 'toggleMobileList',
       value: function toggleMobileList() {
         if (this.fullMobileListShow) {
-          history.replaceState(null, '', '/index.html#player');
+          history.pushState(null, '', '/index.html#player');
           this.fullPlaylistPanel.style.transform = 'translateY(100vh)';
           this.fullMobileListShow = !this.fullMobileListShow;
         } else {
@@ -683,14 +672,17 @@ var ETPlayer = new ETAudioPlayer();
 
 window.onload = function () {
   ETPlayer.miniPlayer.style.transform = 'translateY(0)';
+  history.pushState(null, '', '/index.html');
 };
 
 window.onpopstate = function () {
-  if (window.location.hash === '#player') {
+  if (ETPlayer.fullMobileListShow && ETPlayer.fullMobilePlayerShow) {
     ETPlayer.toggleMobileList();
+    return;
   }
 
-  if (window.location.hash === '') {
+  if (!ETPlayer.fullMobileListShow && ETPlayer.fullMobilePlayerShow) {
     ETPlayer.toggleMobilePlayer();
+    return;
   }
 };
