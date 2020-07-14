@@ -125,6 +125,16 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
 
     _classCallCheck(this, ETAudioPlayer);
 
+    _defineProperty(this, 'handleResize', function () {
+      console.log('ok');
+    });
+
+    _defineProperty(this, 'handleSpace', function (e) {
+      if (e.code === 'Space') {
+        _this.play();
+      }
+    });
+
     _defineProperty(this, 'mouseDown', function () {
       _this.moving = true;
       document.addEventListener('mousemove', _this.moveplayhead, true);
@@ -274,9 +284,13 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
       _this.audio.addEventListener('timeupdate', _this.timeUpdate, false);
     });
 
+    _defineProperty(this, 'setVolume', function (e) {
+      _this.audio.volume = e.target.value / 100;
+    });
+
     this.playlist = [];
     this.fullMobilePlayerShow = false;
-    this.fullMobileList = false;
+    this.fullMobileListShow = false;
     this.currentSong = {};
     this.previousSongId = -1;
     this.playing = false;
@@ -286,6 +300,7 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
     this.playerTitle = document.getElementsByClassName('player-title');
     this.playerSinger = document.getElementsByClassName('player-singer');
     this.playerCover = document.getElementsByClassName('fmp-img');
+    this.volumeContol = document.getElementById('vol-control');
     this.fullPlayer = document.getElementById('fmp');
     this.fullPlaylistPanel = document.getElementById('fml');
     this.progressBarTrack = document.getElementById('progress-bar__track');
@@ -332,9 +347,6 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
         SC.get('playlists/1064225653').then(function (_ref) {
           var tracks = _ref.tracks;
           tracks.forEach(function (song, i) {
-            // let me = song.title.split('-')
-            // let singer = me[0].trim();
-            // let title = me[1].trim();
             _this2.playlist.push({
               id: i,
               title: song.title,
@@ -379,6 +391,12 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
         this.audio.addEventListener('timeupdate', this.timeUpdate, false);
         this.audio.addEventListener('ended', function () {
           return _this3.next();
+        });
+        this.volumeContol.addEventListener('change', function (e) {
+          return _this3.setVolume(e);
+        });
+        this.volumeContol.addEventListener('input', function (e) {
+          return _this3.setVolume(e);
         }); //mobile
 
         this.progressBarButton.addEventListener(
@@ -436,6 +454,16 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
           this.mouseDown,
         );
         document.addEventListener('mouseup', this.mouseUp);
+        document.addEventListener('keypress', function (e) {
+          return _this3.handleSpace(e);
+        });
+        window.addEventListener(
+          'resize',
+          function () {
+            return _this3.handleResize();
+          },
+          true,
+        );
       },
     },
     {
@@ -481,39 +509,27 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
           for (_iterator.s(); !(_step = _iterator.n()).done; ) {
             var e = _step.value;
             e.innerHTML = newSong.title;
-          }
+          } // for (let s of this.playerSinger) {
+          //   s.innerHTML = newSong.singer;
+          // }
         } catch (err) {
           _iterator.e(err);
         } finally {
           _iterator.f();
         }
 
-        var _iterator2 = _createForOfIteratorHelper(this.playerSinger),
+        var _iterator2 = _createForOfIteratorHelper(this.playerCover),
           _step2;
 
         try {
           for (_iterator2.s(); !(_step2 = _iterator2.n()).done; ) {
-            var s = _step2.value;
-            s.innerHTML = newSong.singer;
+            var i = _step2.value;
+            i.src = newSong.cover;
           }
         } catch (err) {
           _iterator2.e(err);
         } finally {
           _iterator2.f();
-        }
-
-        var _iterator3 = _createForOfIteratorHelper(this.playerCover),
-          _step3;
-
-        try {
-          for (_iterator3.s(); !(_step3 = _iterator3.n()).done; ) {
-            var i = _step3.value;
-            i.src = newSong.cover;
-          }
-        } catch (err) {
-          _iterator3.e(err);
-        } finally {
-          _iterator3.f();
         }
 
         this.currentSong = newSong;
@@ -546,38 +562,38 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
     {
       key: 'showPause',
       value: function showPause() {
-        var _iterator4 = _createForOfIteratorHelper(this.playButtons),
-          _step4;
+        var _iterator3 = _createForOfIteratorHelper(this.playButtons),
+          _step3;
 
         try {
-          for (_iterator4.s(); !(_step4 = _iterator4.n()).done; ) {
-            var b = _step4.value;
+          for (_iterator3.s(); !(_step3 = _iterator3.n()).done; ) {
+            var b = _step3.value;
             b.classList.remove('fa-play');
             b.classList.add('fa-pause');
           }
         } catch (err) {
-          _iterator4.e(err);
+          _iterator3.e(err);
         } finally {
-          _iterator4.f();
+          _iterator3.f();
         }
       },
     },
     {
       key: 'showPlay',
       value: function showPlay() {
-        var _iterator5 = _createForOfIteratorHelper(this.playButtons),
-          _step5;
+        var _iterator4 = _createForOfIteratorHelper(this.playButtons),
+          _step4;
 
         try {
-          for (_iterator5.s(); !(_step5 = _iterator5.n()).done; ) {
-            var b = _step5.value;
+          for (_iterator4.s(); !(_step4 = _iterator4.n()).done; ) {
+            var b = _step4.value;
             b.classList.remove('fa-pause');
             b.classList.add('fa-play');
           }
         } catch (err) {
-          _iterator5.e(err);
+          _iterator4.e(err);
         } finally {
-          _iterator5.f();
+          _iterator4.f();
         }
       },
     },
@@ -629,14 +645,14 @@ var ETAudioPlayer = /*#__PURE__*/ (function () {
     {
       key: 'toggleMobileList',
       value: function toggleMobileList() {
-        if (this.fullMobileList) {
+        if (this.fullMobileListShow) {
           history.replaceState(null, '', '/index.html#player');
           this.fullPlaylistPanel.style.transform = 'translateY(100vh)';
-          this.fullMobileList = !this.fullMobileList;
+          this.fullMobileListShow = !this.fullMobileListShow;
         } else {
           history.pushState(null, '', '/index.html#playlist');
           this.fullPlaylistPanel.style.transform = 'translateY(0)';
-          this.fullMobileList = !this.fullMobileList;
+          this.fullMobileListShow = !this.fullMobileListShow;
         }
       },
     },
