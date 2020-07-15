@@ -1,7 +1,11 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const MinifyPlugin = require('babel-minify-webpack-plugin');
 
 module.exports = {
+  optimization: {
+    minimize: true
+  },
   mode: 'none',
   entry: './public/ET.js',
   output: {
@@ -13,6 +17,7 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
   },
   plugins: [
+    new MinifyPlugin(),
     new CopyPlugin({
       patterns: [
         { from: './public/css', to: 'public/css' },
@@ -20,6 +25,7 @@ module.exports = {
         { from: './public/images', to: 'public/images' },
         { from: './public/manifest.json', to: '../dist' },
         { from: './public/index.html', to: '../dist' },
+        { from: './public/video.js', to: '../dist' },
       ],
     }),
   ],
@@ -34,7 +40,7 @@ module.exports = {
             presets: ['@babel/preset-env'],
           },
         },
-      },
+      }
     ],
   },
 };
